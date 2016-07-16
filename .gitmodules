@@ -1,0 +1,9 @@
+[submodule "src/github.com/c2g"]
+	path = src/vendor/github.com/c2g
+	url = https://github.com/dhubler/c2g.git
+[submodule "src/golang.org/x/exp"]
+	path = src/golang.org/x/exp
+	url = https://go.googlesource.com/exp
+[submodule "src/vendor/github.com/kidoman/embd"]
+	path = src/vendor/github.com/kidoman/embd
+	url = https://github.com/kidoman/embd.git
