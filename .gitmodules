@@ -1,15 +1,6 @@
-[submodule "src/github.com/c2g"]
-	path = src/vendor/github.com/c2g/c2g
-	url = https://github.com/dhubler/c2g.git
 [submodule "src/golang.org/x/exp"]
 	path = src/golang.org/x/exp
 	url = https://go.googlesource.com/exp
-[submodule "src/vendor/github.com/kidoman/embd"]
-	path = src/vendor/github.com/kidoman/embd
-	url = https://github.com/kidoman/embd.git
-[submodule "src/vendor/github.com/hybridgroup/gobot"]
-	path = src/vendor/github.com/hybridgroup/gobot
-	url = https://github.com/hybridgroup/gobot.git
 [submodule "src/vendor/github.com/davecheney/gpio"]
 	path = src/vendor/github.com/davecheney/gpio
 	url = https://github.com/davecheney/gpio.git
