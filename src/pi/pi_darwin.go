@@ -1,0 +1,4 @@
+package pi
+
+func LightLed() {
+}
