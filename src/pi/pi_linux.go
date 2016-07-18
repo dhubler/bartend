@@ -5,15 +5,12 @@ import (
 	"time"
 )
 
-func LightLed() {
-	pin, err := gpio.OpenPin(7, gpio.ModeOutput)
+func LightLed(pinId int, howLong time.Duration) {
+	pin, err := gpio.OpenPin(pinId, gpio.ModeOutput)
 	if err != nil {
 		panic(err)
 	}
-	for {
-		pin.Set()
-		time.Sleep(1 * time.Second)
-		pin.Clear()
-		time.Sleep(1 * time.Second)
-	}
+	pin.Set()
+	defer pin.Clear()
+	time.Sleep(howLong)
 }

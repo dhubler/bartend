@@ -7,3 +7,6 @@
 [submodule "src/vendor/golang.org/x/net"]
 	path = src/vendor/golang.org/x/net
 	url = https://go.googlesource.com/net
+[submodule "src/vendor/github.com/c2g"]
+	path = src/vendor/github.com/c2g
+	url = https://github.com/dhubler/c2g.git

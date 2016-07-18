@@ -1,7 +1,9 @@
 package pi
 
 import (
+	"github.com/c2g/c2"
 	"sort"
+	"time"
 )
 
 func AvailableLiquids(pumps []*Pump) []string {
@@ -54,6 +56,15 @@ func DistinctLiquids(recipes map[string]*Recipe) []string {
 	return liquids
 }
 
+func FindPumpByLiquid(pumps []*Pump, liquid string) *Pump {
+	for _, pump := range pumps {
+		if pump.Liquid == liquid {
+			return pump
+		}
+	}
+	return nil
+}
+
 type Liquid string
 
 type Ingredient struct {
@@ -68,11 +79,33 @@ type Recipe struct {
 
 type Pump struct {
 	Id                int
+	GpioPin           int
 	Liquid            string
 	TimeToVolumeRatio float64
 }
 
 type Isaac struct {
-	Pumps   []*Pump
-	Recipes map[string]*Recipe
+	drinkInProgress bool
+	Pumps           []*Pump
+	Recipes         map[string]*Recipe
+}
+
+var DrinkInProgress = c2.NewErrC("Drink in progress", 400)
+
+func (self *Isaac) MakeDrink(recipe *Recipe) error {
+	if self.drinkInProgress {
+		return DrinkInProgress
+	}
+	self.drinkInProgress = true
+	defer func() {
+		self.drinkInProgress = false
+	}()
+	for _, ingredient := range recipe.Ingredients {
+		p := FindPumpByLiquid(self.Pumps, ingredient.Liquid)
+		howLong := time.Millisecond * time.Duration(ingredient.Amount*p.TimeToVolumeRatio)
+		// Pour all liquids in parallel
+		go LightLed(p.GpioPin, howLong)
+	}
+	// drink responsibly
+	return nil
 }
