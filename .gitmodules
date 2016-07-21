@@ -1,12 +1,9 @@
-[submodule "src/golang.org/x/exp"]
-	path = src/golang.org/x/exp
-	url = https://go.googlesource.com/exp
-[submodule "src/vendor/github.com/davecheney/gpio"]
-	path = src/vendor/github.com/davecheney/gpio
-	url = https://github.com/davecheney/gpio.git
 [submodule "src/vendor/golang.org/x/net"]
 	path = src/vendor/golang.org/x/net
 	url = https://go.googlesource.com/net
 [submodule "src/vendor/github.com/c2g"]
 	path = src/vendor/github.com/c2g
 	url = https://github.com/dhubler/c2g.git
+[submodule "src/vendor/github.com/stianeikeland/go-rpio"]
+	path = src/vendor/github.com/stianeikeland/go-rpio
+	url = https://github.com/stianeikeland/go-rpio.git

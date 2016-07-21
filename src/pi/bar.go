@@ -104,7 +104,7 @@ func (self *Isaac) MakeDrink(recipe *Recipe) error {
 		p := FindPumpByLiquid(self.Pumps, ingredient.Liquid)
 		howLong := time.Millisecond * time.Duration(ingredient.Amount*p.TimeToVolumeRatio)
 		// Pour all liquids in parallel
-		go LightLed(p.GpioPin, howLong)
+		go TurnOnFor(Pin(p.GpioPin), howLong)
 	}
 	// drink responsibly
 	return nil

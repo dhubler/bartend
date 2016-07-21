@@ -6,7 +6,6 @@ import (
 	"github.com/c2g/meta/yang"
 	"github.com/c2g/restconf"
 	"pi"
-	"github.com/c2g/c2"
 )
 
 var configFile = "isaac.cfg"
@@ -21,8 +20,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	c2.Debug.Printf("here")
 
 	var root *node.Browser
 	var app pi.Isaac

@@ -4,7 +4,6 @@ import (
 	"github.com/c2g/node"
 	"github.com/c2g/meta/yang"
 	"reflect"
-	"github.com/c2g/c2"
 )
 
 type ApiHandler struct {
