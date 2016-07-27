@@ -1,4 +1,4 @@
-package pi
+package bartend
 
 import (
 	"github.com/c2g/c2"
@@ -84,7 +84,7 @@ type Pump struct {
 	TimeToVolumeRatio float64
 }
 
-type Isaac struct {
+type Bartend struct {
 	drinkInProgress bool
 	Pumps           []*Pump
 	Recipes         map[string]*Recipe
@@ -92,7 +92,7 @@ type Isaac struct {
 
 var DrinkInProgress = c2.NewErrC("Drink in progress", 400)
 
-func (self *Isaac) MakeDrink(recipe *Recipe) error {
+func (self *Bartend) MakeDrink(recipe *Recipe) error {
 	if self.drinkInProgress {
 		return DrinkInProgress
 	}

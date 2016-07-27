@@ -1,4 +1,4 @@
-package pi
+package bartend
 
 import (
 	"time"

@@ -1,5 +1,0 @@
-package pi
-
-func init() {
-
-}

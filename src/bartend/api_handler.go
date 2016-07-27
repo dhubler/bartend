@@ -1,4 +1,4 @@
-package pi
+package bartend
 
 import (
 	"github.com/c2g/node"
@@ -9,7 +9,7 @@ import (
 type ApiHandler struct {
 }
 
-func (self ApiHandler) Manage(root *node.Browser, app *Isaac) node.Node {
+func (self ApiHandler) Manage(root *node.Browser, app *Bartend) node.Node {
 	return &node.MyNode{
 		OnSelect: func(r node.ContainerRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
@@ -47,7 +47,7 @@ func (self ApiHandler) Manage(root *node.Browser, app *Isaac) node.Node {
 }
 
 
-func (self ApiHandler) Pumps(app *Isaac) node.Node {
+func (self ApiHandler) Pumps(app *Bartend) node.Node {
 	return &node.MyNode{
 		OnNext:func(r node.ListRequest) (node.Node, []*node.Value, error) {
 			var p *Pump
@@ -75,7 +75,7 @@ func (self ApiHandler) Pumps(app *Isaac) node.Node {
 	}
 }
 
-func (self ApiHandler) Recipes(isaac *Isaac, recipes map[string]*Recipe) node.Node {
+func (self ApiHandler) Recipes(app *Bartend, recipes map[string]*Recipe) node.Node {
 	index := node.NewIndex(recipes)
 	index.Sort(func(a, b reflect.Value) bool {
 		return a.String() < b.String()
@@ -95,14 +95,14 @@ func (self ApiHandler) Recipes(isaac *Isaac, recipes map[string]*Recipe) node.No
 				recipe = recipes[name]
 			}
 			if recipe != nil {
-				return self.Recipe(isaac, recipe), key, nil
+				return self.Recipe(app, recipe), key, nil
 			}
 			return nil, nil, nil
 		},
 	}
 }
 
-func (self ApiHandler) Drinks(isaac *Isaac, drinks []*Recipe) node.Node {
+func (self ApiHandler) Drinks(app *Bartend, drinks []*Recipe) node.Node {
 	return &node.MyNode{
 		OnNext:func(r node.ListRequest) (node.Node, []*node.Value, error) {
 			var recipe *Recipe
@@ -117,14 +117,14 @@ func (self ApiHandler) Drinks(isaac *Isaac, drinks []*Recipe) node.Node {
 				key = node.SetValues(r.Meta.KeyMeta(), row)
 			}
 			if recipe != nil {
-				return self.Recipe(isaac, recipe), key, nil
+				return self.Recipe(app, recipe), key, nil
 			}
 			return nil, nil, nil
 		},
 	}
 }
 
-func (self ApiHandler) Recipe(isaac *Isaac, recipe *Recipe) node.Node {
+func (self ApiHandler) Recipe(app *Bartend, recipe *Recipe) node.Node {
 	return &node.Extend{
 		Node: node.MarshalContainer(recipe),
 		OnSelect : func(p node.Node, r node.ContainerRequest) (node.Node, error) {
@@ -142,7 +142,7 @@ func (self ApiHandler) Recipe(isaac *Isaac, recipe *Recipe) node.Node {
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "make":
-				if err := isaac.MakeDrink(recipe); err != nil {
+				if err := app.MakeDrink(recipe); err != nil {
 					return nil, err
 				}
 				return nil, nil
@@ -177,8 +177,8 @@ func (self ApiHandler) Pump(pump *Pump) node.Node {
 }
 
 func init() {
-	yang.InternalYang()["isaac"] = `
-module isaac {
+	yang.InternalYang()["bartend"] = `
+module bartend {
   namespace "";
   prefix "";
   revision 0;

@@ -1,14 +1,14 @@
 export GOPATH=$(abspath .)
 
 PKGS = \
-    pi
+    bartend
 
-isaac : isaac-host isaac-pi
-isaac-pi : GOOS = linux
-isaac-pi : GOARCH = arm
+bartend : bartend-host bartend-pi
+bartend-pi : GOOS = linux
+bartend-pi : GOARCH = arm
 
-isaac-% :
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go install ./src/cmd/isaac
+bartend-% :
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go install ./src/cmd/bartend
 
 Test% :
 	$(MAKE) test TEST=$@

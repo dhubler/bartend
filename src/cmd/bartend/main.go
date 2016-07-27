@@ -5,10 +5,10 @@ import (
 	"github.com/c2g/node"
 	"github.com/c2g/meta/yang"
 	"github.com/c2g/restconf"
-	"pi"
+	"bartend"
 )
 
-var configFile = "isaac.cfg"
+var configFile = "bartend.cfg"
 
 func main() {
 	cfg, err := os.OpenFile(configFile, os.O_RDWR, os.ModeExclusive)
@@ -16,14 +16,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	m, err := yang.LoadModule(yang.InternalYang(), "isaac")
+	m, err := yang.LoadModule(yang.InternalYang(), "bartend")
 	if err != nil {
 		panic(err)
 	}
 
 	var root *node.Browser
-	var app pi.Isaac
-	var handler pi.ApiHandler
+	var app bartend.Bartend
+	var handler bartend.ApiHandler
 	root = node.NewBrowser(m, func() node.Node {
 		return handler.Manage(root, &app)
 	})
@@ -31,6 +31,7 @@ func main() {
 		panic(err)
 	}
 	rc := restconf.NewService(root)
+
 	rc.Port = ":8080"
 
 	rc.Listen()
