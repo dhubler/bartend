@@ -7,3 +7,6 @@
 [submodule "src/vendor/github.com/stianeikeland/go-rpio"]
 	path = src/vendor/github.com/stianeikeland/go-rpio
 	url = https://github.com/stianeikeland/go-rpio.git
+[submodule "src/vendor/github.com/c2stack/c2g"]
+	path = src/vendor/github.com/c2stack/c2g
+	url = git@github.com:c2stack/c2g.git
