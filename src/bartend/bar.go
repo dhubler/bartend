@@ -1,9 +1,10 @@
 package bartend
 
 import (
-	"github.com/c2g/c2"
 	"sort"
 	"time"
+
+	"github.com/c2stack/c2g/c2"
 )
 
 func AvailableLiquids(pumps []*Pump) []string {
@@ -82,6 +83,10 @@ type Pump struct {
 	GpioPin           int
 	Liquid            string
 	TimeToVolumeRatio float64
+}
+
+func (self *Pump) Enable(on bool) {
+	PinOn(Pin(self.GpioPin), on)
 }
 
 type Bartend struct {

@@ -1,0 +1,9 @@
+{
+  "name": "bartend",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#2.0-preview"
+  },
+  "devDependencies": {},
+  "ignore": []
+}

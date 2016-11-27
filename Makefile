@@ -1,5 +1,7 @@
 export GOPATH=$(abspath .)
 
+C2DOC = ./bin/c2-doc
+
 PKGS = \
     bartend
 
@@ -19,3 +21,11 @@ test :
 
 clean:
 	rm -rf ./bin/* ./pkg/*
+
+docs : $(C2DOC)
+	YANGPATH=./etc/yang $(C2DOC) -module bartend -title 'Bartend'  > docs/bartend-api.html
+	YANGPATH=./etc/yang $(C2DOC) -module bartend -tmpl dot > docs/bartend-model.dot
+	dot -T svg -o ./docs/bartend-model.svg docs/bartend-model.dot
+
+$(C2DOC) :
+	go install ./src/vendor/github.com/c2stack/c2g/cmd/c2-doc

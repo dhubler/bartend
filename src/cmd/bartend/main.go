@@ -4,12 +4,13 @@ import (
 	"bartend"
 	"os"
 
+	"github.com/c2stack/c2g/meta"
 	"github.com/c2stack/c2g/meta/yang"
 	"github.com/c2stack/c2g/node"
 	"github.com/c2stack/c2g/restconf"
 )
 
-var configFile = "bartend.cfg"
+var configFile = "etc/bartend.cfg"
 
 func main() {
 	cfg, err := os.OpenFile(configFile, os.O_RDWR, os.ModeExclusive)
@@ -29,6 +30,8 @@ func main() {
 		panic(err)
 	}
 	rc := restconf.NewService(yangPath, root)
+	webPath := &meta.FileStreamSource{Root: "web"}
+	rc.SetDocRoot(webPath)
 	rc.Port = ":8080"
 	rc.Listen()
 }

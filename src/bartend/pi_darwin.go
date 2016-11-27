@@ -1,8 +1,9 @@
 package bartend
 
 import (
-	"time"
 	"log"
+	"time"
+
 	"github.com/stianeikeland/go-rpio"
 )
 
@@ -14,8 +15,12 @@ func Pin(id int) rpio.Pin {
 	return pin
 }
 
+func PinOn(pin rpio.Pin, on bool) {
+	log.Printf("pin %d %v", pin, on)
+}
+
 func TurnOnFor(pin rpio.Pin, howLong time.Duration) {
-	log.Printf("pin %d on for %dms", pin, howLong / time.Millisecond)
+	log.Printf("pin %d on for %dms", pin, howLong/time.Millisecond)
 	time.Sleep(howLong)
 	log.Printf("pin %d off", pin)
 }

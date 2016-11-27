@@ -1,0 +1,59 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="bartend-recipe">
+  <template strip-whitespace>
+    <style>
+    :host {
+      display: block;
+      border: 1px solid black;
+      margin: 3px;
+      padding: 10px;
+    }
+    .ingredient {
+      list-style-type: none;      
+    }
+    </style>
+    <span>[[recipe.name]]</span>
+    <ul>
+    <template is="dom-repeat" items="[[recipe.ingredient]]">
+      <li class="ingredient">[[item.amount]]oz [[item.liquid]]</li>
+    </template>
+    </ul>
+    <div>
+      <button on-click="make">Make</button>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+class BartendRecipeElement extends Polymer.Element {
+
+  static get is() {
+    return 'bartend-recipe';
+  }
+
+  static get config() {
+    return {
+      properties : {
+        apiUrl : String,
+        recipe  : Object
+      }
+    };
+  }
+
+  make() {
+    var r = new XMLHttpRequest();
+    r.open("POST", this.apiUrl + "make", true);
+    r.onreadystatechange = function () {
+      console.log("good");
+    }
+    r.send();
+  }
+
+  constructor() {
+    super();
+  }
+}
+customElements.define(BartendRecipeElement.is, BartendRecipeElement);
+</script>

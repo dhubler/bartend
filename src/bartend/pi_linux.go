@@ -1,12 +1,13 @@
 package bartend
 
 import (
-	"time"
-	"log"
-	"github.com/stianeikeland/go-rpio"
-	"os"
 	"fmt"
+	"log"
+	"os"
 	"os/signal"
+	"time"
+
+	"github.com/stianeikeland/go-rpio"
 )
 
 // SainSmart relay flips off on pin.High and on on pin.Low so things will be
@@ -31,6 +32,14 @@ func init() {
 	}()
 }
 
+func PinOn(pin rpio.Pin, on bool) {
+	if on {
+		pin.High()
+	} else {
+		pin.Low()
+	}
+}
+
 func Pin(id int) rpio.Pin {
 	if p, opened := openedPins[id]; opened {
 		return p
@@ -42,7 +51,7 @@ func Pin(id int) rpio.Pin {
 }
 
 func TurnOnFor(pin rpio.Pin, howLong time.Duration) {
-	log.Printf("pin %d on for %dms", pin, howLong / time.Millisecond)
+	log.Printf("pin %d on for %dms", pin, howLong/time.Millisecond)
 	pin.Low()
 	defer pin.High()
 	time.Sleep(howLong)

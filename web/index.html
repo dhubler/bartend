@@ -1,0 +1,66 @@
+<html>
+    <head>
+<script src="bower_components/webcomponentsjs/webcomponents-lite.js">
+    </script>
+    <link rel="import" href="src/bartend-recipe.html">
+    <link rel="import" href="src/bartend-pump.html">
+    <style>
+        #menu {
+            display: flex;
+            width: 400px;
+        }        
+        #menu li {
+            flex: 1;
+            display: inline;
+            list-style-type: none;
+            padding: 5px;
+            margin: 2px;
+            background: #c0c0c0;            
+            cursor: pointer;
+        }
+    </style>        
+    </head>
+    <body>
+        <div>
+            <ul id="menu">
+                <li onclick="javascript:recipes();">Recipes</li>
+                <li onclick="javascript:setup();">Setup</li>
+            </ul>
+        </div>
+        <div id="recipes">
+        </div>
+        <div id="setup">            
+        </div>
+        <script>
+var r = new XMLHttpRequest();
+r.open("GET", "/restconf", true);
+r.onreadystatechange = function () {
+  if (r.readyState != 4 || r.status != 200) return;
+  var data = JSON.parse(r.responseText);
+  var e = document.getElementById('recipes');
+  for (var i in data.recipe) {
+      var re = document.createElement("bartend-recipe");
+      re.recipe =  data.recipe[i];
+      re.apiUrl = "/restconf/recipe=" + re.recipe.name + "/";
+      e.appendChild(re);
+  }
+  for (var i in data.pump) {
+      var re = document.createElement("bartend-pump");
+      re.pump =  data.pump[i];
+      re.apiUrl = "/restconf/pump=" + re.pump.id + "/";
+      e.appendChild(re);
+  }
+};
+r.send();      
+function recipes() {
+    console.log("recipes");
+}  
+function custom() {
+    console.log("custom");
+}  
+function setup() {
+    console.log("setup");
+}  
+        </script>
+    </body>
+</html>
