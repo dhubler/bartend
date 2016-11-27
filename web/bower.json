@@ -2,7 +2,13 @@
   "name": "bartend",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#2.0-preview"
+    "polymer": "Polymer/polymer",
+    "paper-button": "PolymerElements/paper-button",
+    "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
+    "iron-pages": "PolymerElements/iron-pages#^1.0.8",
+    "paper-card": "PolymerElements/paper-card#^1.1.4"
   },
   "devDependencies": {},
   "ignore": []

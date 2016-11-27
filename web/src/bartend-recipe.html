@@ -1,12 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="bartend-recipe">
   <template strip-whitespace>
     <style>
     :host {
       display: block;
-      border: 1px solid black;
       margin: 3px;
       padding: 10px;
     }
@@ -14,46 +13,41 @@
       list-style-type: none;      
     }
     </style>
-    <span>[[recipe.name]]</span>
+    <h1>[[recipe.name]]</h1>
     <ul>
     <template is="dom-repeat" items="[[recipe.ingredient]]">
       <li class="ingredient">[[item.amount]]oz [[item.liquid]]</li>
     </template>
     </ul>
     <div>
-      <button on-click="make">Make</button>
+      <paper-button on-tap="make">Make</paper-button>
     </div>
   </template>
+
+  <script>
+    Polymer({
+      is : 'bartend-recipe',
+      
+      properties : {
+        apiUrl : {
+          type : String
+        },
+        recipe  : {
+          type : Object
+        }
+      },
+
+      make : function() {
+        var r = new XMLHttpRequest();
+        r.open("POST", this.apiUrl + "make", true);
+        r.onreadystatechange = function () {
+          console.log("good");
+        }
+        r.send();    
+      }
+
+    });
+  </script>
+
 </dom-module>
 
-<script>
-class BartendRecipeElement extends Polymer.Element {
-
-  static get is() {
-    return 'bartend-recipe';
-  }
-
-  static get config() {
-    return {
-      properties : {
-        apiUrl : String,
-        recipe  : Object
-      }
-    };
-  }
-
-  make() {
-    var r = new XMLHttpRequest();
-    r.open("POST", this.apiUrl + "make", true);
-    r.onreadystatechange = function () {
-      console.log("good");
-    }
-    r.send();
-  }
-
-  constructor() {
-    super();
-  }
-}
-customElements.define(BartendRecipeElement.is, BartendRecipeElement);
-</script>

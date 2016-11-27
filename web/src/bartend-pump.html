@@ -1,12 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="bartend-pump">
   <template strip-whitespace>
     <style>
     :host {
       display: block;
-      border: 1px solid black;
       margin: 3px;
       padding: 10px;
     }
@@ -14,53 +13,41 @@
       list-style-type: none;      
     }
     </style>
-
-      <li>[[pump.id]] - [[pump.liquid]]</li>
+    <h1>Pump #[[pump.id]]</h1>
+     [[pump.liquid]]
     </ul>
     <div>
-      <button on-click="on">On</button>
-      <button on-click="off">Off</button>
+      <paper-button on-click="on">On</paper-button>
+      <paper-button on-click="off">Off</paper-button>
     </div>
   </template>
-</dom-module>
 
-<script>
-class BartendPumpElement extends Polymer.Element {
-
-  static get is() {
-    return 'bartend-pump';
-  }
-
-  static get config() {
-    return {
+  <script>
+    Polymer({
+      is: 'bartend-pump',
       properties : {
         pump: Object,
         apiUrl : String
+      },
+
+      on : function() {
+        this._enable(true);
+      },
+
+      off : function() {
+        this._enable(false);
+      },
+
+      _enable: function(on) {
+        var r = new XMLHttpRequest();
+        var cmd = on ? "on" : "off";
+        r.open("POST", this.apiUrl + cmd);
+        r.onreadystatechange = function () {
+          console.log("pump ", cmd);
+        }
+        r.send();      
       }
-    };
-  }
+    });
+  </script>
+</dom-module>
 
-  off() {
-    this.enable(false);
-  }
-
-  on() {
-    this.enable(true);
-  }
-
-  enable(on) {
-    var r = new XMLHttpRequest();
-    var cmd = on ? "on" : "off";
-    r.open("POST", this.apiUrl + cmd);
-    r.onreadystatechange = function () {
-      console.log("pump ", cmd);
-    }
-    r.send();
-  }
-
-  constructor() {
-    super();
-  }
-}
-customElements.define(BartendPumpElement.is, BartendPumpElement);
-</script>
