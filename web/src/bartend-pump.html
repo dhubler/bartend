@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
 
 <dom-module id="bartend-pump">
   <template strip-whitespace>
@@ -12,13 +13,15 @@
     .ingredient {
       list-style-type: none;      
     }
+    .content {
+      margin: 10px;
+    }
     </style>
-    <h1>Pump #[[pump.id]]</h1>
-     [[pump.liquid]]
-    </ul>
+    <h1>Pump [[pump.id]]</h1>
+    <div class="content">[[pump.liquid]]</div>
     <div>
-      <paper-button on-click="on">On</paper-button>
-      <paper-button on-click="off">Off</paper-button>
+      <paper-button raised on-click="on">On</paper-button>
+      <paper-button raised on-click="off">Off</paper-button>
     </div>
   </template>
 

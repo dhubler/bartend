@@ -22,7 +22,10 @@ test :
 clean:
 	rm -rf ./bin/* ./pkg/*
 
-docs : $(C2DOC)
+.PHONY: doc-tools 
+doc-tools :	$(C2DOC)
+
+docs : doc-tools
 	YANGPATH=./etc/yang $(C2DOC) -module bartend -title 'Bartend'  > docs/bartend-api.html
 	YANGPATH=./etc/yang $(C2DOC) -module bartend -tmpl dot > docs/bartend-model.dot
 	dot -T svg -o ./docs/bartend-model.svg docs/bartend-model.dot

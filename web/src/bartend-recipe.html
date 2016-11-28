@@ -12,6 +12,10 @@
     .ingredient {
       list-style-type: none;      
     }
+
+    paper-button {
+      background-color: green;
+    }
     </style>
     <h1>[[recipe.name]]</h1>
     <ul>
@@ -20,7 +24,7 @@
     </template>
     </ul>
     <div>
-      <paper-button on-tap="make">Make</paper-button>
+      <paper-button raised on-tap="make">Make</paper-button>
     </div>
   </template>
 

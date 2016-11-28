@@ -1,0 +1,78 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="bartend-recipe.html">
+<link rel="import" href="bartend-pump.html">
+
+<dom-module id="bartend-app">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+    :host {
+      display: block;
+    }
+    .link {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+    }
+    .card {
+        display: block;
+        margin: 5px;
+    }    
+    paper-tabs {
+        background-color: #00bbd3;
+    }
+    </style>
+    <paper-tabs id="menu" selected="{{selected}}">
+        <paper-tab link><a href="#recipes" class="link" tabindex="-1">Recipes</a></paper-tab>
+        <paper-tab link><a href="#setup" class="link" tabindex="-1">Setup</a></paper-tab>
+    </paper-tabs>
+    <iron-pages selected="{{selected}}">
+        <div class="layout vertical" id="recipes">
+            <template is="dom-repeat" items="{{data.recipe}}">
+                <paper-card class="flex card">
+                    <bartend-recipe api-url="/restconf/recipe={{item.name}}/" recipe="{{item}}"></bartend-recipe>
+                </paper-card>
+            </template>
+        </div>
+        <div class="layout vertical" id="setup">            
+            <template is="dom-repeat" items="{{data.pump}}">
+                <paper-card class="flex card">
+                    <bartend-pump api-url="/restconf/pump={{item.id}}/" pump="{{item}}"></bartend-pump>
+                </paper-card>
+            </template>
+        </div>
+    </iron-pages>
+  </template>
+    <script>
+    Polymer({
+        is: 'bartend-app',
+        properties: {
+            selected : {
+                type: Number,
+                value: 0
+            },
+            data : {
+                type: Object
+            }
+        },
+        attached: function() {
+            var self = this;
+            var r = new XMLHttpRequest();
+            r.open("GET", "/restconf/", true);
+            r.onreadystatechange = function () {
+                if (r.readyState != 4 || r.status != 200) {
+                    return;
+                }
+                self.data = JSON.parse(r.responseText);
+            };
+            r.send();
+        }
+    });
+    </script>
+</dom-module>
+
