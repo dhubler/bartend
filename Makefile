@@ -19,6 +19,19 @@ TEST='Test*'
 test :
 	go test -v $(PKGS) -run $(TEST)
 
+archive : ./web/build.html
+	! test -d bartend || rm -rf bartend
+	mkdir bartend
+	rsync -av ./bin/linux_arm/ ./bartend/bin/
+	rsync -avR ./etc/ ./bartend/
+	rsync -av ./web/images/ ./bartend/web/
+	cp ./web/build.html ./bartend/web/index.html
+	tar -cvzf bartend.tgz bartend
+
+web/build.html : 
+	cd web ; \
+		vulcanize index.html > build.html
+
 clean:
 	rm -rf ./bin/* ./pkg/*
 
