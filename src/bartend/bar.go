@@ -1,10 +1,12 @@
 package bartend
 
 import (
+	"log"
 	"sort"
 	"time"
 
 	"github.com/c2stack/c2g/c2"
+	"github.com/kidoman/embd"
 )
 
 func AvailableLiquids(pumps []*Pump) []string {
@@ -85,8 +87,20 @@ type Pump struct {
 	TimeToVolumeRatio float64
 }
 
-func (self *Pump) Enable(on bool) {
-	PinOn(Pin(self.GpioPin), on)
+func (self *Pump) Enable(on bool) error {
+	var v int
+	// not sure why, but  1 - off,  0 - on
+	if on {
+		v = embd.Low
+	} else {
+		v = embd.High
+	}
+	p, err := GetPin(self.GpioPin)
+	if err != nil {
+		log.Printf("Err pin %d - %s", self.GpioPin, err)
+		return err
+	}
+	return p.Write(v)
 }
 
 type Bartend struct {
@@ -109,7 +123,11 @@ func (self *Bartend) MakeDrink(recipe *Recipe) error {
 		p := FindPumpByLiquid(self.Pumps, ingredient.Liquid)
 		howLong := time.Millisecond * time.Duration(ingredient.Amount*p.TimeToVolumeRatio)
 		// Pour all liquids in parallel
-		go TurnOnFor(Pin(p.GpioPin), howLong)
+		if pin, err := GetPin(p.GpioPin); err != nil {
+			return err
+		} else {
+			go TurnOnFor(pin, howLong)
+		}
 	}
 	// drink responsibly
 	return nil

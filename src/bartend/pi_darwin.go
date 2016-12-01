@@ -1,26 +1,14 @@
 package bartend
 
-import (
-	"log"
-	"time"
+import "log"
 
-	"github.com/stianeikeland/go-rpio"
-)
+type fakePin int
 
-func Open() {
+func (self fakePin) Write(v int) error {
+	log.Printf("pin #%d=%d", self, v)
+	return nil
 }
 
-func Pin(id int) rpio.Pin {
-	pin := rpio.Pin(id)
-	return pin
-}
-
-func PinOn(pin rpio.Pin, on bool) {
-	log.Printf("pin %d %v", pin, on)
-}
-
-func TurnOnFor(pin rpio.Pin, howLong time.Duration) {
-	log.Printf("pin %d on for %dms", pin, howLong/time.Millisecond)
-	time.Sleep(howLong)
-	log.Printf("pin %d off", pin)
+func GetPin(id int) (Pin, error) {
+	return fakePin(id), nil
 }

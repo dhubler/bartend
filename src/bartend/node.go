@@ -1,6 +1,7 @@
 package bartend
 
 import (
+	"log"
 	"reflect"
 
 	"github.com/c2stack/c2g/node"
@@ -9,7 +10,7 @@ import (
 // Node is management for bartend app
 func Node(app *Bartend) node.Node {
 	return &node.MyNode{
-		OnSelect: func(r node.ContainerRequest) (node.Node, error) {
+		OnChild: func(r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "pump":
 				if r.New {
@@ -124,7 +125,7 @@ func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
 func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 	return &node.Extend{
 		Node: node.ReflectNode(recipe),
-		OnSelect: func(p node.Node, r node.ContainerRequest) (node.Node, error) {
+		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "ingredient":
 				if r.New {
@@ -183,7 +184,8 @@ func pumpNode(pump *Pump) node.Node {
 			switch r.Meta.GetIdent() {
 			case "on", "off":
 				on := r.Meta.GetIdent() == "on"
-				pump.Enable(on)
+				log.Printf("pump=%d, on=%v", pump.GpioPin, on)
+				return nil, pump.Enable(on)
 			}
 			return nil, nil
 		},

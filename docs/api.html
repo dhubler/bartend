@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+  <title>RESTful API</title>
+  <style>
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	background-color: #fff;
+	line-height: 1.3em;
+	color: #222;
+	text-align: center;
+}
+
+code {
+	display: block;
+	font-family: Menlo, monospace;
+	font-size: 14px;
+	line-height: 1.4em;
+	overflow-x: auto;
+	background: #EFEFEF;
+	padding: 10px;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+a {
+	color: #375EAB;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+p, li {
+	max-width: 800px;
+	word-wrap: break-word;
+	list-style: none;
+}
+
+li:before {
+    content: "•";
+    font-size: 28px;
+    padding-right: 7px;
+}
+
+li.def:before {
+    color:#13b5ea;
+}
+
+li.action:before {
+    color:#b64ff7;
+}
+
+li.notification:before {
+    color:#4fb32e;
+}
+
+p, code {
+	margin: 20px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	margin: 20px 0 20px;
+	padding: 0;
+	font-weight: bold;
+}
+h1 {
+	font-size: 28px;
+	line-height: 1;
+}
+h2 {
+	font-size: 20px;
+	color: white;
+	padding: 8px;
+	line-height: 1.25;
+	font-weight: normal;
+	clear: right;
+}
+h3 {
+	font-size: 20px;
+}
+h3,
+h4 {
+	margin: 20px 5px;
+}
+h4 {
+	font-size: 16px;
+}
+h5 {
+    margin-left: 30px;
+}
+
+h2.def {
+        background-color: #13b5ea;
+}
+
+h2.action::after {
+	content: " (Action) ";
+	font-style: italic;
+	font-size: smaller;
+}
+
+h2.notification::after {
+	content: " (Notification) ";
+	font-style: italic;
+	font-size: smaller;
+}
+
+h2.action {
+	background-color: #b64ff7;
+}
+
+h2.notification {
+	background-color: #4fb32e;
+}
+
+div#page {
+	width: 100%;
+}
+
+div#page > .container {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 20px;
+	max-width: 950px;
+}
+
+.metalist {
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.output {
+    background-color: beige;
+}
+
+div#page.wide > .container {
+	max-width: none;
+}
+
+.fieldDetails {
+    font-size: smaller;
+    font-style: italic;
+}
+
+hr {
+    border-style: none;
+    border-top: 1px solid black;
+}
+
+@media (max-width: 930px) {
+	#heading-wide {
+		display: none;
+	}
+	#heading-narrow {
+		display: block;
+	}
+}
+
+
+@media (max-width: 760px) {
+	.container .left,
+	.container .right {
+		width: auto;
+		float: none;
+	}
+}
+
+@media (max-width: 700px) {
+	body {
+		font-size: 15px;
+	}
+	code {
+		font-size: 13px;
+	}
+
+	div#page > .container {
+		padding: 0 10px;
+	}
+
+	#heading-wide {
+		display: block;
+	}
+	#heading-narrow {
+		display: none;
+	}
+
+	p,
+	code,
+	ul,
+	ol {
+		margin: 10px;
+	}
+}
+
+@media (max-width: 480px) {
+	#heading-wide {
+		display: none;
+	}
+	#heading-narrow {
+		display: block;
+	}
+}
+
+@media print {
+	code {
+		background: #FFF;
+		border: 1px solid #BBB;
+		white-space: pre-wrap;
+	}
+}
+  </style>
+</head>
+<body>
+
+<div id="page" class="wide" tabindex="-1" style="outline: 0px;">
+<div class="container">
+<h1>RESTful API</h1>
+<details>
+  <summary>Index</summary>
+<ul>
+
+<li class="def"><a href="#%2fbartend">/</a></li>
+
+
+<li class="action"><a href="#%2fbartend%2fcalibrateStart">/calibrateStart</a></li>
+
+<li class="action"><a href="#%2fbartend%2fcalibrateStop">/calibrateStop</a></li>
+
+
+
+
+
+<li class="def"><a href="#%2fpump">/pump</a></li>
+
+
+
+
+
+
+<li class="def"><a href="#%2favailable">/available</a></li>
+
+
+<li class="action"><a href="#%2favailable%2fmake">/available={name}/make</a></li>
+
+
+
+
+
+<li class="def"><a href="#%2favailable%3d%7bname%7d%2fingredient">/available={name}/ingredient</a></li>
+
+
+
+
+
+
+<li class="def"><a href="#%2frecipe">/recipe</a></li>
+
+
+<li class="action"><a href="#%2frecipe%2fmake">/recipe={name}/make</a></li>
+
+
+
+
+
+</ul>
+</details>
+
+
+	<h2 class="def"><a name="/bartend"></a>/<span class="metalist"></span></h2>
+	<p></p>
+
+        
+	<code><strong><a href="#%2fpump">pump[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+        
+	<code><strong>liquids</strong> string[] -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2favailable">available[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+        
+	<code><strong><a href="#%2frecipe">recipe[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+
+
+	<h2 class="action"><a name="/bartend/calibrateStart"></a>/<span class="metalist">calibrateStart</span></h2>
+	<p></p>
+        
+
+        
+
+	<h2 class="action"><a name="/bartend/calibrateStop"></a>/<span class="metalist">calibrateStop</span></h2>
+	<p></p>
+        
+		
+			
+			    <code><strong>update</strong> boolean -  <span class="fieldDetails"></span></code>
+			
+		
+	
+
+        
+<h5>response</h5>
+		
+			
+			    <code><strong>timeToVolumeRatio</strong> decimal64 -  <span class="fieldDetails"></span></code>
+			
+		
+	
+
+
+
+
+
+	<h2 class="def"><a name="/pump"></a>/<span class="metalist">pump</span></h2>
+	<p></p>
+
+        
+	<code><strong>id</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>gpioPin</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>timeToVolumeRatio</strong> decimal64 - Number of millisecs to turn on pump to pour one milliliter <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>liquid</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+
+
+
+
+	<h2 class="def"><a name="/available"></a>/<span class="metalist">available</span></h2>
+	<p></p>
+
+        
+	<code><strong>name</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2favailable%3d%7bname%7d%2fingredient">ingredient[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+
+
+	<h2 class="action"><a name="/available/make"></a>/available={name}/<span class="metalist">make</span></h2>
+	<p></p>
+        
+
+        
+
+
+
+
+
+	<h2 class="def"><a name="/available={name}/ingredient"></a>/available={name}/<span class="metalist">ingredient</span></h2>
+	<p></p>
+
+        
+	<code><strong>liquid</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>amount</strong> decimal64 -  <span class="fieldDetails"></span></code>
+	
+
+
+
+
+
+	<h2 class="def"><a name="/recipe"></a>/<span class="metalist">recipe</span></h2>
+	<p></p>
+
+        
+	<code><strong>name</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2favailable%3d%7bname%7d%2fingredient">ingredient[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+
+
+	<h2 class="action"><a name="/recipe/make"></a>/recipe={name}/<span class="metalist">make</span></h2>
+	<p></p>
+        
+		
+			
+			    <code><strong>multiplier</strong> decimal64 - Optional, make it a double by passing 2 <span class="fieldDetails"></span></code>
+			
+		
+	
+
+        
+
+
+
+
+
+
+</div>
+</div>
+
+</body></html>

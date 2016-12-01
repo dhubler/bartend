@@ -1,0 +1,149 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+
+
+       _bartend [
+         label = "{|liquids : string[]\l}"
+       ]
+
+
+
+       _bartend_calibrateStart [
+         label = "{calibrateStart (action)|}"
+         color = "#b64ff7"
+       ]
+       _bartend -> _bartend_calibrateStart [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+       _bartend_calibrateStop [
+         label = "{calibrateStop (action)|Input|&#32;&#32;update : boolean\l|Output|&#32;&#32;timeToVolumeRatio : decimal64\l}"
+         color = "#b64ff7"
+       ]
+       _bartend -> _bartend_calibrateStop [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+
+
+
+
+       _pump [
+         label = "{pump|id : int32\lgpioPin : int32\ltimeToVolumeRatio : decimal64\lliquid : string\l}"
+       ]
+
+
+
+       _pump_on [
+         label = "{on (action)|}"
+         color = "#b64ff7"
+       ]
+       _pump -> _pump_on [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+       _pump_off [
+         label = "{off (action)|}"
+         color = "#b64ff7"
+       ]
+       _pump -> _pump_off [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+
+
+
+
+       _available [
+         label = "{available|name : string\l}"
+       ]
+
+
+
+       _available_make [
+         label = "{make (action)|}"
+         color = "#b64ff7"
+       ]
+       _available -> _available_make [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+
+
+
+
+       _available_name__ingredient [
+         label = "{ingredient|liquid : string\lamount : decimal64\l}"
+       ]
+
+
+
+
+
+
+
+       _recipe [
+         label = "{recipe|name : string\l}"
+       ]
+
+
+
+       _recipe_make [
+         label = "{make (action)|Input|&#32;&#32;multiplier : decimal64\l|}"
+         color = "#b64ff7"
+       ]
+       _recipe -> _recipe_make [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+
+
+
+
+
+
+
+  
+    _bartend -> _pump
+    
+    _bartend -> _available
+    _bartend -> _recipe
+
+  
+    
+    
+    
+    
+
+  
+    
+    _available -> _available_name__ingredient
+
+  
+    
+    
+
+  
+    
+    _recipe -> _available_name__ingredient
+
+
+}
