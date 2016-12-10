@@ -1,0 +1,1 @@
+../src/vendor/github.com/c2stack/c2g/examples/car/notify.js

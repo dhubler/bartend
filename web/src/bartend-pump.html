@@ -27,9 +27,13 @@
   <script>
     Polymer({
       is: 'bartend-pump',
+
       properties : {
         pump: Object,
-        apiUrl : String
+      },
+
+      attached: function() {
+        this.url = bartend.apiUrl + 'pump=' + this.pump.id + '/';
       },
 
       on : function() {
@@ -43,7 +47,7 @@
       _enable: function(on) {
         var r = new XMLHttpRequest();
         var cmd = on ? "on" : "off";
-        r.open("POST", this.apiUrl + cmd);
+        r.open("POST", this.url + cmd);
         r.onreadystatechange = function () {
           console.log("pump ", cmd);
         }

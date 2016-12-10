@@ -11,9 +11,9 @@ module bartend {
     leaf gpioPin {
     	type int32;
     }
-    leaf timeToVolumeRatio {
+    leaf timeToVolumeRatioMs {
       description "Number of millisecs to turn on pump to pour one milliliter";
-      type decimal64;
+      type int32;
     }
     leaf liquid {
       type string;
@@ -32,31 +32,115 @@ module bartend {
     type string;
   }
 
+  grouping ingredient {
+    leaf liquid {
+      type string;
+    }
+    leaf amount {
+      type decimal64;
+    }
+    leaf weight {
+      config "false";
+      type int32;
+    }
+  }
+
   grouping drink {
+    leaf id {
+      type int32;
+    }
     leaf name {
+      type string;
+    }
+    leaf description {
       type string;
     }
     list ingredient {
       key "liquid";
-      leaf liquid {
-        type string;
-      }
-      leaf amount {
-        type decimal64;
-      }
+      uses ingredient;
     }
   }
 
-  list available {
-    key "name";
-    uses drink;
-    action make {
-      input {}
+  container current {
+    config "false";
+    leaf percentComplete {
+      type int32;
     }
+    leaf complete {
+      type boolean;
+    }
+
+    list auto {
+      key "id";
+      leaf id {
+        type int32;
+      }
+      container ingredient {
+        uses ingredient;        
+      }
+      leaf complete {
+        type boolean;
+      }
+      leaf percentComplete {
+        type int32;
+      }
+    }
+
+    list manual {
+      key "id";
+      leaf id {
+        type int32;
+      }
+      container ingredient {
+        uses ingredient;        
+      }
+      leaf complete {
+        type boolean;
+      }
+      action done {
+        description "mark step done";
+        input {
+        }
+      }
+    }    
+
+    notification update {
+      leaf percentComplete {
+        type int32;
+      }
+      leaf complete {
+        type boolean;
+      }
+      list manual {
+        key "id";
+        leaf id {
+          type int32;
+        }
+        leaf complete {
+          type boolean;
+        }
+      }
+      list auto {
+        key "id";
+        leaf id {
+          type int32;
+        }
+        leaf complete {
+          type boolean;
+        }
+        leaf percentComplete {
+          type int32;
+        }
+      }
+    }
+    
+    action stop {
+      description "Stop making drink where ever in the process it is";
+    } 
   }
 
   list recipe {
-    key "name";
+    key "id";
     uses drink;
     action make {
     	input {
@@ -65,24 +149,6 @@ module bartend {
     			type decimal64;
     		}
     	}
-    }
-  }
-
-  action calibrateStart {
-    input {
-    }
-  }
-
-  action calibrateStop {
-    input {
-      leaf update {
-        type boolean;
-      }
-    }
-    output {
-      leaf timeToVolumeRatio {
-        type decimal64;
-      }
     }
   }
 }

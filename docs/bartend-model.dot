@@ -20,30 +20,12 @@ digraph G {
 
 
 
-       _bartend_calibrateStart [
-         label = "{calibrateStart (action)|}"
-         color = "#b64ff7"
-       ]
-       _bartend -> _bartend_calibrateStart [
-         style = "dashed"
-         color = "#b64ff7"
-       ]
-
-       _bartend_calibrateStop [
-         label = "{calibrateStop (action)|Input|&#32;&#32;update : boolean\l|Output|&#32;&#32;timeToVolumeRatio : decimal64\l}"
-         color = "#b64ff7"
-       ]
-       _bartend -> _bartend_calibrateStop [
-         style = "dashed"
-         color = "#b64ff7"
-       ]
-
 
 
 
 
        _pump [
-         label = "{pump|id : int32\lgpioPin : int32\ltimeToVolumeRatio : decimal64\lliquid : string\l}"
+         label = "{pump|id : int32\lgpioPin : int32\ltimeToVolumeRatioMs : int32\lliquid : string\l}"
        ]
 
 
@@ -70,17 +52,65 @@ digraph G {
 
 
 
-       _available [
-         label = "{available|name : string\l}"
+       _current [
+         label = "{current|percentComplete : int32\lcomplete : boolean\l}"
        ]
 
 
 
-       _available_make [
-         label = "{make (action)|}"
+       _current_stop [
+         label = "{stop (action)|}"
          color = "#b64ff7"
        ]
-       _available -> _available_make [
+       _current -> _current_stop [
+         style = "dashed"
+         color = "#b64ff7"
+       ]
+
+
+
+       _current_update [
+         label = "{update (notification)|percentComplete : int32\lcomplete : boolean\lmanual[…] : \lauto[…] : \l}"
+         color = "#4fb32e"
+       ]
+       _current -> _current_update [
+         style = "dashed"
+         color = "#4fb32e"
+       ]
+
+
+
+       _current_auto [
+         label = "{auto|id : int32\lcomplete : boolean\lpercentComplete : int32\l}"
+       ]
+
+
+
+
+
+
+
+       _current_auto_id__ingredient [
+         label = "{ingredient|liquid : string\lamount : decimal64\lweight : int32\l}"
+       ]
+
+
+
+
+
+
+
+       _current_manual [
+         label = "{manual|id : int32\lcomplete : boolean\l}"
+       ]
+
+
+
+       _current_manual_done [
+         label = "{done (action)|}"
+         color = "#b64ff7"
+       ]
+       _current_manual -> _current_manual_done [
          style = "dashed"
          color = "#b64ff7"
        ]
@@ -89,8 +119,8 @@ digraph G {
 
 
 
-       _available_name__ingredient [
-         label = "{ingredient|liquid : string\lamount : decimal64\l}"
+       _current_manual_id__ingredient [
+         label = "{ingredient|liquid : string\lamount : decimal64\lweight : int32\l}"
        ]
 
 
@@ -100,7 +130,7 @@ digraph G {
 
 
        _recipe [
-         label = "{recipe|name : string\l}"
+         label = "{recipe|id : int32\lname : string\ldescription : string\l}"
        ]
 
 
@@ -118,13 +148,23 @@ digraph G {
 
 
 
+       _recipe_id__ingredient [
+         label = "{ingredient|liquid : string\lamount : decimal64\lweight : int32\l}"
+       ]
+
+
+
+
+
+
+
 
 
 
   
     _bartend -> _pump
     
-    _bartend -> _available
+    _bartend -> _current
     _bartend -> _recipe
 
   
@@ -135,15 +175,41 @@ digraph G {
 
   
     
-    _available -> _available_name__ingredient
+    
+    _current -> _current_auto
+    _current -> _current_manual
+
+  
+    
+    _current_auto -> _current_auto_id__ingredient
+    
+    
 
   
     
     
+    
 
   
     
-    _recipe -> _available_name__ingredient
+    _current_manual -> _current_manual_id__ingredient
+    
+
+  
+    
+    
+    
+
+  
+    
+    
+    
+    _recipe -> _recipe_id__ingredient
+
+  
+    
+    
+    
 
 
 }

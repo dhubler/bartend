@@ -2,6 +2,8 @@ package main
 
 import (
 	"bartend"
+	"flag"
+	"fmt"
 	"os"
 
 	"github.com/c2stack/c2g/meta"
@@ -10,10 +12,19 @@ import (
 	"github.com/c2stack/c2g/restconf"
 )
 
-var configFile = "etc/bartend.cfg"
+var configFileName = flag.String("config", "", "Configuration file")
+var port = flag.String("port", ":80", "Port for http listener")
 
+// Start Bartend application.
+//  YANGPATH=./etc/yang ./bin/bartend -config ./etc/bartend.cfg -port :8080
 func main() {
-	cfg, err := os.OpenFile(configFile, os.O_RDWR, os.ModeExclusive)
+	flag.Parse()
+	if len(*configFileName) == 0 {
+		fmt.Fprint(os.Stderr, "Required 'config' parameter missing\n")
+		os.Exit(-1)
+	}
+
+	cfg, err := os.OpenFile(*configFileName, os.O_RDWR, os.ModeExclusive)
 	defer cfg.Close()
 	if err != nil {
 		panic(err)
@@ -24,14 +35,15 @@ func main() {
 		panic(err)
 	}
 
-	var app bartend.Bartend
-	root := node.NewBrowser(m, bartend.Node(&app))
+	app := bartend.NewBartend()
+	root := node.NewBrowser(m, bartend.Node(app))
 	if err := root.Root().InsertFrom(node.NewJsonReader(cfg).Node()).LastErr; err != nil {
 		panic(err)
 	}
 	rc := restconf.NewService(yangPath, root)
 	webPath := &meta.FileStreamSource{Root: "web"}
 	rc.SetDocRoot(webPath)
-	rc.Port = ":8080"
+	rc.SetRootRedirect("/ui/index.html")
+	rc.Port = *port
 	rc.Listen()
 }

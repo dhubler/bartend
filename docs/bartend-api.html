@@ -233,10 +233,6 @@ hr {
 <li class="def"><a href="#%2fbartend">/</a></li>
 
 
-<li class="action"><a href="#%2fbartend%2fcalibrateStart">/calibrateStart</a></li>
-
-<li class="action"><a href="#%2fbartend%2fcalibrateStop">/calibrateStop</a></li>
-
 
 
 
@@ -252,16 +248,41 @@ hr {
 
 
 
-<li class="def"><a href="#%2favailable">/available</a></li>
+<li class="def"><a href="#%2fcurrent">/current</a></li>
 
 
-<li class="action"><a href="#%2favailable%2fmake">/available={name}/make</a></li>
-
-
+<li class="action"><a href="#%2fcurrent%2fstop">/current/stop</a></li>
 
 
 
-<li class="def"><a href="#%2favailable%3d%7bname%7d%2fingredient">/available={name}/ingredient</a></li>
+<li class="notification"><a href="#%2fcurrent%2fupdate">/current/update</a></li>
+
+
+
+<li class="def"><a href="#%2fcurrent%2fauto">/current/auto</a></li>
+
+
+
+
+
+
+<li class="def"><a href="#%2fcurrent%2fauto%3d%7bid%7d%2fingredient">/current/auto={id}/ingredient</a></li>
+
+
+
+
+
+
+<li class="def"><a href="#%2fcurrent%2fmanual">/current/manual</a></li>
+
+
+<li class="action"><a href="#%2fcurrent%2fmanual%2fdone">/current/manual={id}/done</a></li>
+
+
+
+
+
+<li class="def"><a href="#%2fcurrent%2fmanual%3d%7bid%7d%2fingredient">/current/manual={id}/ingredient</a></li>
 
 
 
@@ -271,7 +292,14 @@ hr {
 <li class="def"><a href="#%2frecipe">/recipe</a></li>
 
 
-<li class="action"><a href="#%2frecipe%2fmake">/recipe={name}/make</a></li>
+<li class="action"><a href="#%2frecipe%2fmake">/recipe={id}/make</a></li>
+
+
+
+
+
+<li class="def"><a href="#%2frecipe%3d%7bid%7d%2fingredient">/recipe={id}/ingredient</a></li>
+
 
 
 
@@ -293,39 +321,12 @@ hr {
 	
 
         
-	<code><strong><a href="#%2favailable">available[…]</strong></a> -  <span class="fieldDetails"></span></code>
+	<code><strong><a href="#%2fcurrent">current{…}</strong></a> -  <span class="fieldDetails"></span></code>
         
 
         
 	<code><strong><a href="#%2frecipe">recipe[…]</strong></a> -  <span class="fieldDetails"></span></code>
         
-
-
-
-	<h2 class="action"><a name="/bartend/calibrateStart"></a>/<span class="metalist">calibrateStart</span></h2>
-	<p></p>
-        
-
-        
-
-	<h2 class="action"><a name="/bartend/calibrateStop"></a>/<span class="metalist">calibrateStop</span></h2>
-	<p></p>
-        
-		
-			
-			    <code><strong>update</strong> boolean -  <span class="fieldDetails"></span></code>
-			
-		
-	
-
-        
-<h5>response</h5>
-		
-			
-			    <code><strong>timeToVolumeRatio</strong> decimal64 -  <span class="fieldDetails"></span></code>
-			
-		
-	
 
 
 
@@ -343,7 +344,7 @@ hr {
 	
 
         
-	<code><strong>timeToVolumeRatio</strong> decimal64 - Number of millisecs to turn on pump to pour one milliliter <span class="fieldDetails"></span></code>
+	<code><strong>timeToVolumeRatioMs</strong> int32 - Number of millisecs to turn on pump to pour one milliliter <span class="fieldDetails"></span></code>
 	
 
         
@@ -368,30 +369,89 @@ hr {
 
 
 
-	<h2 class="def"><a name="/available"></a>/<span class="metalist">available</span></h2>
+	<h2 class="def"><a name="/current"></a>/<span class="metalist">current</span></h2>
 	<p></p>
 
         
-	<code><strong>name</strong> string -  <span class="fieldDetails"></span></code>
+	<code><strong>percentComplete</strong> int32 -  <span class="fieldDetails"></span></code>
 	
 
         
-	<code><strong><a href="#%2favailable%3d%7bname%7d%2fingredient">ingredient[…]</strong></a> -  <span class="fieldDetails"></span></code>
+	<code><strong>complete</strong> boolean -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2fcurrent%2fauto">auto[…]</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+        
+	<code><strong><a href="#%2fcurrent%2fmanual">manual[…]</strong></a> -  <span class="fieldDetails"></span></code>
         
 
 
 
-	<h2 class="action"><a name="/available/make"></a>/available={name}/<span class="metalist">make</span></h2>
+	<h2 class="action"><a name="/current/stop"></a>/current/<span class="metalist">stop</span></h2>
+	<p>Stop making drink where ever in the process it is</p>
+        
+
+        
+
+
+
+
+	<h2 class="notification"><a name="/current/update"></a>/current/<span class="metalist">update</span></h2>
 	<p></p>
+
+        
+		
+			
+			    <code><strong>percentComplete</strong> int32 -  <span class="fieldDetails"></span></code>
+			
+		
+			
+			    <code><strong>complete</strong> boolean -  <span class="fieldDetails"></span></code>
+			
+		
+			
+	                    <code class="expandContainer"><details class="expandable"
+	                    ><summary><strong>manual[…]</strong>  - </summary><div style="margin: 2px 0 0 10px;"><strong>id</strong> int32 -  <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>complete</strong> boolean -  <span class="fieldDetails"></span></div></details></code>
+			
+		
+			
+	                    <code class="expandContainer"><details class="expandable"
+	                    ><summary><strong>auto[…]</strong>  - </summary><div style="margin: 2px 0 0 10px;"><strong>id</strong> int32 -  <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>complete</strong> boolean -  <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>percentComplete</strong> int32 -  <span class="fieldDetails"></span></div></details></code>
+			
+		
+	
+	
+
+
+
+
+	<h2 class="def"><a name="/current/auto"></a>/current/<span class="metalist">auto</span></h2>
+	<p></p>
+
+        
+	<code><strong>id</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2fcurrent%2fauto%3d%7bid%7d%2fingredient">ingredient{…}</strong></a> -  <span class="fieldDetails"></span></code>
         
 
         
+	<code><strong>complete</strong> boolean -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>percentComplete</strong> int32 -  <span class="fieldDetails"></span></code>
+	
 
 
 
 
 
-	<h2 class="def"><a name="/available={name}/ingredient"></a>/available={name}/<span class="metalist">ingredient</span></h2>
+	<h2 class="def"><a name="/current/auto={id}/ingredient"></a>/current/auto={id}/<span class="metalist">ingredient</span></h2>
 	<p></p>
 
         
@@ -402,6 +462,56 @@ hr {
 	<code><strong>amount</strong> decimal64 -  <span class="fieldDetails"></span></code>
 	
 
+        
+	<code><strong>weight</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+
+
+
+
+	<h2 class="def"><a name="/current/manual"></a>/current/<span class="metalist">manual</span></h2>
+	<p></p>
+
+        
+	<code><strong>id</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2fcurrent%2fmanual%3d%7bid%7d%2fingredient">ingredient{…}</strong></a> -  <span class="fieldDetails"></span></code>
+        
+
+        
+	<code><strong>complete</strong> boolean -  <span class="fieldDetails"></span></code>
+	
+
+
+
+	<h2 class="action"><a name="/current/manual/done"></a>/current/manual={id}/<span class="metalist">done</span></h2>
+	<p>mark step done</p>
+        
+
+        
+
+
+
+
+
+	<h2 class="def"><a name="/current/manual={id}/ingredient"></a>/current/manual={id}/<span class="metalist">ingredient</span></h2>
+	<p></p>
+
+        
+	<code><strong>liquid</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>amount</strong> decimal64 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>weight</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
 
 
 
@@ -410,16 +520,24 @@ hr {
 	<p></p>
 
         
+	<code><strong>id</strong> int32 -  <span class="fieldDetails"></span></code>
+	
+
+        
 	<code><strong>name</strong> string -  <span class="fieldDetails"></span></code>
 	
 
         
-	<code><strong><a href="#%2favailable%3d%7bname%7d%2fingredient">ingredient[…]</strong></a> -  <span class="fieldDetails"></span></code>
+	<code><strong>description</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong><a href="#%2frecipe%3d%7bid%7d%2fingredient">ingredient[…]</strong></a> -  <span class="fieldDetails"></span></code>
         
 
 
 
-	<h2 class="action"><a name="/recipe/make"></a>/recipe={name}/<span class="metalist">make</span></h2>
+	<h2 class="action"><a name="/recipe/make"></a>/recipe={id}/<span class="metalist">make</span></h2>
 	<p></p>
         
 		
@@ -430,6 +548,25 @@ hr {
 	
 
         
+
+
+
+
+
+	<h2 class="def"><a name="/recipe={id}/ingredient"></a>/recipe={id}/<span class="metalist">ingredient</span></h2>
+	<p></p>
+
+        
+	<code><strong>liquid</strong> string -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>amount</strong> decimal64 -  <span class="fieldDetails"></span></code>
+	
+
+        
+	<code><strong>weight</strong> int32 -  <span class="fieldDetails"></span></code>
+	
 
 
 

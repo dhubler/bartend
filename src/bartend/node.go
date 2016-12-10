@@ -22,15 +22,19 @@ func Node(app *Bartend) node.Node {
 			case "available":
 				if app.Recipes != nil {
 					liquids := AvailableLiquids(app.Pumps)
-					available := AvailableRecipes(liquids, app.Recipes)
+					available := AutomaticRecipes(liquids, app.Recipes)
 					return drinksNode(app, available), nil
 				}
 			case "recipe":
 				if r.New {
-					app.Recipes = make(map[string]*Recipe, 0)
+					app.Recipes = make(map[int]*Recipe, 0)
 				}
 				if app.Recipes != nil {
 					return recipesNode(app, app.Recipes), nil
+				}
+			case "current":
+				if app.Current != nil {
+					return currentDrinkNode(app), nil
 				}
 			}
 			return nil, nil
@@ -41,6 +45,124 @@ func Node(app *Bartend) node.Node {
 				hnd.Val = &node.Value{Strlist: DistinctLiquids(app.Recipes)}
 			}
 			return nil
+		},
+	}
+}
+
+func currentDrinkNode(app *Bartend) node.Node {
+	return &node.Extend{
+		Node: node.ReflectNode(app.Current),
+		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
+			switch r.Meta.GetIdent() {
+			case "auto":
+				if len(app.Current.Automatic) > 0 {
+					return autoNodes(app.Current.Automatic), nil
+				}
+			case "manual":
+				if len(app.Current.Manual) > 0 {
+					return manualNodes(app.Current.Manual), nil
+				}
+			default:
+				return p.Child(r)
+			}
+			return nil, nil
+		},
+		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
+			switch r.Meta.GetIdent() {
+			case "percentComplete":
+				hnd.Val = &node.Value{Int: app.Current.PercentComplete()}
+			case "complete":
+				hnd.Val = &node.Value{Bool: app.Current.Complete()}
+			default:
+				return p.Field(r, hnd)
+			}
+			return nil
+		},
+		OnNotify: func(p node.Node, r node.NotifyRequest) (node.NotifyCloser, error) {
+			switch r.Meta.GetIdent() {
+			case "update":
+				sub := app.OnDrinkUpdate(func(d *Drink) {
+					r.Stream.Notify(r.Meta, r.Selection.Path, currentDrinkNode(app))
+				})
+				return sub.Close, nil
+			}
+			return nil, nil
+		},
+		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
+			switch r.Meta.GetIdent() {
+			case "stop":
+				app.Current.Stop()
+			}
+			return nil, nil
+		},
+	}
+}
+
+func manualNodes(steps []*ManualStep) node.Node {
+	return &node.MyNode{
+		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+			var step *ManualStep
+			key := r.Key
+			var id int
+			if key != nil {
+				id := key[0].Int
+				if id < len(steps) {
+					step = steps[id]
+				}
+			} else if r.Row < len(steps) {
+				step = steps[id]
+				key = node.SetValues(r.Meta.KeyMeta(), id)
+			}
+			if step != nil {
+				return stepNode(node.ReflectNode(step), id, step.Ingredient), key, nil
+			}
+			return nil, nil, nil
+		},
+	}
+}
+
+func autoNodes(steps []*AutoStep) node.Node {
+	return &node.MyNode{
+		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+			var step *AutoStep
+			key := r.Key
+			var id int
+			if key != nil {
+				id = key[0].Int
+				if id < len(steps) {
+					step = steps[id]
+				}
+			} else if r.Row < len(steps) {
+				id = r.Row
+				step = steps[id]
+				key = node.SetValues(r.Meta.KeyMeta(), id)
+			}
+			if step != nil {
+				return stepNode(node.ReflectNode(step), id, step.Ingredient), key, nil
+			}
+			return nil, nil, nil
+		},
+	}
+}
+
+func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
+	return &node.Extend{
+		Node: base,
+		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
+			switch r.Meta.GetIdent() {
+			case "id":
+				hnd.Val = &node.Value{Int: id}
+			default:
+				return p.Field(r, hnd)
+			}
+			return nil
+		},
+		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
+			switch r.Meta.GetIdent() {
+			case "ingredient":
+				return ingredientNode(ingredient), nil
+			}
+			return p.Child(r)
 		},
 	}
 }
@@ -73,24 +195,27 @@ func pumpsNode(app *Bartend) node.Node {
 	}
 }
 
-func recipesNode(app *Bartend, recipes map[string]*Recipe) node.Node {
+func recipesNode(app *Bartend, recipes map[int]*Recipe) node.Node {
 	index := node.NewIndex(recipes)
 	index.Sort(func(a, b reflect.Value) bool {
-		return a.String() < b.String()
+		return a.Int() < b.Int()
 	})
 	return &node.MyNode{
 		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
 			var recipe *Recipe
 			key := r.Key
 			if r.New {
-				recipe = &Recipe{Name: r.Key[0].Str}
-				recipes[recipe.Name] = recipe
+				recipe = &Recipe{Id: r.Key[0].Int}
+				recipes[recipe.Id] = recipe
 			} else if key != nil {
-				recipe = recipes[key[0].Str]
+				recipe = recipes[key[0].Int]
 			} else {
-				name := index.NextKey(r.Row).String()
-				key = node.SetValues(r.Meta.KeyMeta(), name)
-				recipe = recipes[name]
+				v := index.NextKey(r.Row)
+				if v != node.NO_VALUE {
+					id := int(v.Int())
+					key = node.SetValues(r.Meta.KeyMeta(), id)
+					recipe = recipes[id]
+				}
 			}
 			if recipe != nil {
 				return recipeNode(app, recipe), key, nil
@@ -170,9 +295,24 @@ func ingredientsNode(recipe *Recipe) node.Node {
 				key = node.SetValues(r.Meta.KeyMeta(), ingredient.Liquid)
 			}
 			if ingredient != nil {
-				return node.ReflectNode(ingredient), key, nil
+				return ingredientNode(ingredient), key, nil
 			}
 			return nil, nil, nil
+		},
+	}
+}
+
+func ingredientNode(ingredient *Ingredient) node.Node {
+	return &node.Extend{
+		Node: node.ReflectNode(ingredient),
+		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
+			switch r.Meta.GetIdent() {
+			case "weight":
+				hnd.Val = &node.Value{Int: ingredient.Weight()}
+			default:
+				return p.Field(r, hnd)
+			}
+			return nil
 		},
 	}
 }

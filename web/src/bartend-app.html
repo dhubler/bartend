@@ -35,14 +35,14 @@
         <div class="layout vertical" id="recipes">
             <template is="dom-repeat" items="{{data.recipe}}">
                 <paper-card class="flex card">
-                    <bartend-recipe api-url="/restconf/recipe={{item.name}}/" recipe="{{item}}"></bartend-recipe>
+                    <bartend-recipe recipe="{{item}}"></bartend-recipe>
                 </paper-card>
             </template>
         </div>
         <div class="layout vertical" id="setup">            
             <template is="dom-repeat" items="{{data.pump}}">
                 <paper-card class="flex card">
-                    <bartend-pump api-url="/restconf/pump={{item.id}}/" pump="{{item}}"></bartend-pump>
+                    <bartend-pump pump="{{item}}"></bartend-pump>
                 </paper-card>
             </template>
         </div>
@@ -63,7 +63,7 @@
         attached: function() {
             var self = this;
             var r = new XMLHttpRequest();
-            r.open("GET", "/restconf/", true);
+            r.open("GET", bartend.apiUrl, true);
             r.onreadystatechange = function () {
                 if (r.readyState != 4 || r.status != 200) {
                     return;

@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="bartend-drink.html">
 
 <dom-module id="bartend-recipe">
   <template strip-whitespace>
@@ -12,19 +14,50 @@
     .ingredient {
       list-style-type: none;      
     }
-
+    .content {
+      display: flex;
+      flex-direction: row;
+    }
+    .main {
+      flex: 1;
+    }
+    .body {
+      flex: 2;
+      font-size: x-large;
+    }
     paper-button {
       background-color: #81A3E1;
     }
+
+    .buttonBar {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .buttonSpacer {
+      flex: 1;
+    }
     </style>
-    <h1>[[recipe.name]]</h1>
-    <ul>
-    <template is="dom-repeat" items="[[recipe.ingredient]]">
-      <li class="ingredient">[[item.amount]]oz [[item.liquid]]</li>
-    </template>
-    </ul>
-    <div>
-      <paper-button raised on-tap="make">Make</paper-button>
+    <div class="content">
+      <div class="main">
+        <h1>[[recipe.name]]</h1>
+        <p>[[recipe.description]]</p>
+      </div>
+      <iron-pages id="pages" class="body" selected="0">
+        <div id="home">
+          <ul>
+          <template is="dom-repeat" items="[[recipe.ingredient]]">
+            <li class="ingredient">[[item.amount]] oz [[item.liquid]]</li>
+          </template>
+          </ul>
+          <div class="buttonBar">
+            <paper-button raised on-tap="make">Make</paper-button>
+          </div>
+        </div>
+        <div id="make">
+          <bartend-drink id="drink" recipe="[[recipe]]" on-done="doneMake"></bartend-drink>
+        </div>
+      </iron-pages>
     </div>
   </template>
 
@@ -33,23 +66,19 @@
       is : 'bartend-recipe',
       
       properties : {
-        apiUrl : {
-          type : String
-        },
         recipe  : {
           type : Object
         }
       },
 
       make : function() {
-        var r = new XMLHttpRequest();
-        r.open("POST", this.apiUrl + "make", true);
-        r.onreadystatechange = function () {
-          console.log("good");
-        }
-        r.send();    
-      }
+        this.$.pages.selectNext();
+        this.$.drink.start();
+      },
 
+      doneMake: function() {
+        this.$.pages.selectNext();
+      }
     });
   </script>
 
