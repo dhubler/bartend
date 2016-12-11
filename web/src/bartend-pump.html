@@ -32,8 +32,19 @@
         pump: Object,
       },
 
-      attached: function() {
-        this.url = bartend.apiUrl + 'pump=' + this.pump.id + '/';
+      _attached: function() {
+        this.url = bartend.apiUrl + '?fields=liquids' + this.pump.id + '/';
+        var self = this;
+        var r = new XMLHttpRequest();
+        r.open("GET", bartend.apiUrl + "current", true);
+        r.onreadystatechange = function() {
+          if (r.readyState === XMLHttpRequest.DONE) {
+            if (r.status === 200) {
+                self.liquids = JSON.parse(r.responseText).liquids;
+            }
+          }
+        }; 
+        r.send();        
       },
 
       on : function() {
@@ -47,7 +58,7 @@
       _enable: function(on) {
         var r = new XMLHttpRequest();
         var cmd = on ? "on" : "off";
-        r.open("POST", this.url + cmd);
+        r.open("POST", bartend.apiUrl + "pump=" + this.pump.id + "/" + cmd);
         r.onreadystatechange = function () {
           console.log("pump ", cmd);
         }

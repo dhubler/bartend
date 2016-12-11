@@ -174,6 +174,7 @@ func (self *Drink) Complete() bool {
 
 func (self *Drink) Stop() {
 	self.ticker.Stop()
+	self.allPumpsOn(false)
 	self.Aborted = true
 }
 

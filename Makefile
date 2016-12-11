@@ -5,6 +5,13 @@ C2DOC = ./bin/c2-doc
 PKGS = \
     bartend
 
+all: \
+	test \
+	bartend \
+	build \
+	docs \
+	archive
+
 bartend : bartend-host bartend-pi
 bartend-pi : GOOS = linux
 bartend-pi : GOARCH = arm
@@ -17,18 +24,23 @@ Test% :
 
 TEST='Test*'
 test :
-	go test -v $(PKGS) -run $(TEST)
+	go test $(PKGS) -run $(TEST)
 
 archive : bartend-pi ./web/build.html
 	! test -d bartend || rm -rf bartend
-	mkdir bartend
+	mkdir -p bartend/web/images
 	rsync -av ./bin/linux_arm/ ./bartend/bin/
 	rsync -avR ./etc/ ./bartend/
-	rsync -av ./web/images/ ./bartend/web/
+	rsync -av ./web/images ./bartend/web
+	cp \
+	  ./docs/api.html \
+	  ./docs/bartend-model.svg \
+	  ./web/*.js \
+	  ./bartend/web
 	cp ./web/build.html ./bartend/web/index.html
 	tar -cvzf bartend.tgz bartend
 
-web/build.html : 
+build : 
 	cd web ; \
 		vulcanize index.html > build.html
 
