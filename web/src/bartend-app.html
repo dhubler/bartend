@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="bartend-recipe.html">
@@ -31,6 +32,7 @@
         <paper-tab link><a href="#recipes" class="link" tabindex="-1">Recipes</a></paper-tab>
         <paper-tab link><a href="#setup" class="link" tabindex="-1">Setup</a></paper-tab>
     </paper-tabs>
+    <paper-toast id="msg"></paper-toast>
     <iron-pages selected="{{selected}}">
         <div class="layout vertical" id="recipes">
             <template is="dom-repeat" items="{{data.recipe}}">
@@ -60,6 +62,7 @@
                 type: Object
             }
         },
+
         attached: function() {
             var self = this;
             var r = new XMLHttpRequest();
@@ -69,9 +72,28 @@
                     return;
                 }
                 self.data = JSON.parse(r.responseText);
+                self._subscribe();
             };
             r.send();
+        },
+
+        _subscribe: function() {
+            var self = this;
+            var complete = false;
+            bartend.wsocket().on('bartend', 'current/update', function(update) {
+                console.log(update.complete, self.complete);
+                if (update.complete != self.complete) {
+                    if (update.complete) {
+                        self.$.msg.text = "Drink complete";
+                    } else {
+                        self.$.msg.text = "Drink in progress...";
+                    }
+                    self.complete = update.complete;
+                    self.$.msg.open();
+                }
+            });
         }
+
     });
     </script>
 </dom-module>

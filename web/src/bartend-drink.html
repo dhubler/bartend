@@ -1,17 +1,25 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-shared-styles.html">
 
 <dom-module id="bartend-drink">
     <template>
+        <style include="paper-dialog-shared-styles"></style>
         <style>
         :host {
             display:block;
+            padding: 3px;
+            min-width: 300px;
+            max-width: 300px;
+            min-height: 150px;
+        }
+        .content {
+            padding: 20px;
         }
         paper-button {
             background-color: #81A3E1;
         }
-
         .buttonBar {
             display: flex;
             flex-direction: row;
@@ -25,7 +33,7 @@
         </style>
         <iron-pages id="steps" selected="0">
             <div id="auto">
-                <ul>
+                <ul class="content">
                     <template is="dom-repeat" items="{{drink.auto}}">
                         <li class="ingredient">[[item.ingredient.liquid]]</li>
                         <li class="progress"><paper-progress value="[[item.percentComplete]]"></paper-progress></li>
@@ -38,7 +46,9 @@
                 </div>
             </div>
             <div id="manual">
-                [[manualInstruction]]
+                <div class="content">
+                    [[manualInstruction]]
+                </div>
                 <div class="buttonBar">
                     <paper-button raised on-tap="stop">Stop</paper-button>
                     <div class="buttonSpacer"></div>
@@ -51,6 +61,10 @@
     Polymer({
       is: 'bartend-drink',
 
+      behaviors: [
+        Polymer.PaperDialogBehavior
+      ],
+
       properties : {
         recipe  : {
           type : Object
@@ -59,6 +73,7 @@
 
       attached: function() {
         this.url = bartend.apiUrl + 'recipe=' + this.recipe.id + '/';
+        this.sub = null;
       },
 
       start: function() {
@@ -114,12 +129,7 @@
 
       _subscribe: function() {    
           var self = this;
-          var driver = new WebSocket(bartend.wsUrl);
-          this.notification = new notify.handler(driver);
-          this.notification.done = function() {
-              self.notification.close();
-          };
-          this.notification.on('bartend', 'current/update', function(update) {
+          this.sub = bartend.wsocket().on('bartend', 'current/update', function(update) {
               for (var i = 0; i < update.auto.length; i++) {
                 self.drink.auto[i].percentComplete = update.auto[i].percentComplete;
                 self.notifyPath('drink.auto.' + i + '.percentComplete', self.drink.auto[i].percentComplete);
@@ -128,17 +138,19 @@
       },
 
       _done: function() {
-          if (typeof(this.notification) != "undefined") {
-              this.notification.close();
+          if (this.sub != null) {
+              bartend.wsocket().off(this.sub);
+              this.sub = null;
           }
           this.fire('done');
+          this.toggle();
       },
 
       _nextManual: function() {
         this.manualStepIndex++;
         var total
         if (this.manualStepIndex >= this.drink.manual.length) {
-            this.stop();
+            this._done();
         } else {
             var step = this.drink.manual[this.manualStepIndex];
             this.totalWeight += step.ingredient.weight;

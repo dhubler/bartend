@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
 <link rel="import" href="bartend-drink.html">
 
 <dom-module id="bartend-recipe">
@@ -28,7 +28,6 @@
     paper-button {
       background-color: #81A3E1;
     }
-
     .buttonBar {
       display: flex;
       flex-direction: row;
@@ -37,27 +36,28 @@
     .buttonSpacer {
       flex: 1;
     }
+
+    #makeDialog {
+      display: none;
+    }
     </style>
     <div class="content">
       <div class="main">
         <h1>[[recipe.name]]</h1>
         <p>[[recipe.description]]</p>
       </div>
-      <iron-pages id="pages" class="body" selected="0">
-        <div id="home">
-          <ul>
-          <template is="dom-repeat" items="[[recipe.ingredient]]">
-            <li class="ingredient">[[item.amount]] oz [[item.liquid]]</li>
-          </template>
-          </ul>
-          <div class="buttonBar">
-            <paper-button raised on-tap="make">Make</paper-button>
-          </div>
+      <div class="body">
+        <ul>
+        <template is="dom-repeat" items="[[recipe.ingredient]]">
+          <li class="ingredient">[[item.amount]] oz [[item.liquid]]</li>
+        </template>
+        </ul>
+        <div class="buttonBar">
+          <paper-button raised on-tap="make">Make</paper-button>
+          <paper-button raised on-tap="make">Sample</paper-button>
+          <bartend-drink id="drink" modal recipe="[[recipe]]"></bartend-drink>
         </div>
-        <div id="make">
-          <bartend-drink id="drink" recipe="[[recipe]]" on-done="doneMake"></bartend-drink>
-        </div>
-      </iron-pages>
+      </div>
     </div>
   </template>
 
@@ -72,12 +72,8 @@
       },
 
       make : function() {
-        this.$.pages.selectNext();
+        this.$.drink.toggle();
         this.$.drink.start();
-      },
-
-      doneMake: function() {
-        this.$.pages.selectNext();
       }
     });
   </script>

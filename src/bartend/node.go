@@ -110,6 +110,7 @@ func manualNodes(steps []*ManualStep) node.Node {
 					step = steps[id]
 				}
 			} else if r.Row < len(steps) {
+				id = r.Row
 				step = steps[id]
 				key = node.SetValues(r.Meta.KeyMeta(), id)
 			}

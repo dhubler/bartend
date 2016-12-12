@@ -295,7 +295,9 @@ func (self *Bartend) MakeDrink(recipe *Recipe) error {
 	for _, ingredient := range recipe.Ingredients {
 		p := FindPumpByLiquid(self.Pumps, ingredient.Liquid)
 		if p == nil {
-			drink.Manual = append(drink.Manual, &ManualStep{Ingredient: ingredient})
+			drink.Manual = append(drink.Manual, &ManualStep{
+				Ingredient: ingredient,
+			})
 		} else {
 			drink.Automatic = append(drink.Automatic, &AutoStep{
 				Ingredient: ingredient,
