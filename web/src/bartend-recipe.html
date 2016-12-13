@@ -54,7 +54,7 @@
         </ul>
         <div class="buttonBar">
           <paper-button raised on-tap="make">Make</paper-button>
-          <paper-button raised on-tap="make">Sample</paper-button>
+          <paper-button raised on-tap="sample">Sample</paper-button>
           <bartend-drink id="drink" modal recipe="[[recipe]]"></bartend-drink>
         </div>
       </div>
@@ -71,9 +71,17 @@
         }
       },
 
+      sample: function() {
+        this.scale(0.1);
+      },
+
       make : function() {
+        this.scale(1);
+      },
+
+      scale: function(multiplier) {
         this.$.drink.toggle();
-        this.$.drink.start();
+        this.$.drink.start(multiplier);        
       }
     });
   </script>

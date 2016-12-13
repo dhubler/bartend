@@ -76,7 +76,7 @@
         this.sub = null;
       },
 
-      start: function() {
+      start: function(scale) {
         var self = this;
         this.$.steps.selected = 0;
         this.manualStepIndex = -1;
@@ -93,7 +93,7 @@
             }
           }
         }
-        r.send();
+        r.send('{"multiplier":' + scale + '}');
       },
 
       _loadCurrent: function() {

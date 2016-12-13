@@ -91,6 +91,12 @@ type Ingredient struct {
 	Amount float64
 }
 
+func (self *Ingredient) Scale(scale float64) *Ingredient {
+	copy := *self
+	copy.Amount = copy.Amount * scale
+	return &copy
+}
+
 func (self *Ingredient) Weight() int {
 	return int(self.Amount * LiquidToGrams)
 }
@@ -287,23 +293,24 @@ func (self *Drink) Start(l DrinkProgressListener) {
 	}
 }
 
-func (self *Bartend) MakeDrink(recipe *Recipe) error {
+func (self *Bartend) MakeDrink(recipe *Recipe, scale float64) error {
 	if self.Current != nil && !self.Current.Complete() {
 		return DrinkInProgress
 	}
 	var drink Drink
 	self.Current = &drink
 	for _, ingredient := range recipe.Ingredients {
+		scaled := ingredient.Scale(scale)
 		p := FindPumpByLiquid(self.Pumps, ingredient.Liquid)
 		if p == nil {
 			drink.Manual = append(drink.Manual, &ManualStep{
-				Ingredient: ingredient,
+				Ingredient: scaled,
 			})
 		} else {
 			drink.Automatic = append(drink.Automatic, &AutoStep{
-				Ingredient: ingredient,
+				Ingredient: scaled,
 				pump:       p,
-				PourTime:   p.calculatePourTime(ingredient.Amount),
+				PourTime:   p.calculatePourTime(scaled.Amount),
 			})
 		}
 	}

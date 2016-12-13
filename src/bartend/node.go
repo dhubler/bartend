@@ -266,7 +266,15 @@ func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "make":
-				if err := app.MakeDrink(recipe); err != nil {
+				scale := 1.0
+				if !r.Input.IsNil() {
+					if scaleVal, err := r.Input.GetValue("multiplier"); err != nil {
+						return nil, err
+					} else {
+						scale = scaleVal.Float
+					}
+				}
+				if err := app.MakeDrink(recipe, scale); err != nil {
 					return nil, err
 				}
 				return nil, nil

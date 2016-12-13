@@ -124,7 +124,7 @@ func TestMakeDrink(t *testing.T) {
 		},
 	}
 
-	if err := b.MakeDrink(r); err != nil {
+	if err := b.MakeDrink(r, 1); err != nil {
 		t.Error(err)
 	}
 	if b.Current == nil {
@@ -133,7 +133,7 @@ func TestMakeDrink(t *testing.T) {
 	assertEqual(t, 1, len(b.Current.Manual))
 	assertEqual(t, 1, len(b.Current.Automatic))
 	assertEqual(t, false, b.Current.Complete())
-	if err := b.MakeDrink(r); err == nil {
+	if err := b.MakeDrink(r, 1); err == nil {
 		t.Error("supposed to get error that drink is in progress")
 	}
 	t.Log(b.Current.Automatic[0].PourTime)
