@@ -80,8 +80,10 @@
         _subscribe: function() {
             var self = this;
             var complete = false;
-            bartend.wsocket().on('bartend', 'current/update', function(update) {
-                console.log(update.complete, self.complete);
+            bartend.wsocket().on('bartend-app', 'current/update', function(update) {
+                if (update == null) {
+                    return
+                }
                 if (update.complete != self.complete) {
                     if (update.complete) {
                         self.$.msg.text = "Drink complete";

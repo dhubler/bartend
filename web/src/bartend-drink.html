@@ -129,10 +129,19 @@
 
       _subscribe: function() {    
           var self = this;
-          this.sub = bartend.wsocket().on('bartend', 'current/update', function(update) {
+          this.sub = bartend.wsocket().on('bartend-drink', 'current/update', function(update) {
+              var autoComplete = true;
               for (var i = 0; i < update.auto.length; i++) {
                 self.drink.auto[i].percentComplete = update.auto[i].percentComplete;
+                if (!update.auto[i].complete) {
+                    autoComplete = false;
+                }
                 self.notifyPath('drink.auto.' + i + '.percentComplete', self.drink.auto[i].percentComplete);
+              }
+              if (update.complete) {
+                  self._done();
+              } else if (autoComplete) {
+                  setTimeout(self._nextAuto.bind(self), 1000);                  
               }
           });
       },
@@ -150,7 +159,7 @@
         this.manualStepIndex++;
         var total
         if (this.manualStepIndex >= this.drink.manual.length) {
-            this._done();
+            this.stop();
         } else {
             var step = this.drink.manual[this.manualStepIndex];
             this.totalWeight += step.ingredient.weight;
