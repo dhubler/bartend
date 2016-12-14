@@ -8,7 +8,6 @@ PKGS = \
 all: \
 	test \
 	bartend \
-	build \
 	docs \
 	archive
 
@@ -28,21 +27,15 @@ test :
 
 archive : bartend-pi ./web/build.html
 	! test -d bartend || rm -rf bartend
-	mkdir -p bartend/web/images
+	mkdir bartend
 	rsync -av ./bin/linux_arm/ ./bartend/bin/
 	rsync -avR ./etc/ ./bartend/
-	rsync -av ./web/images ./bartend/web
+	rsync -aRL ./web/ ./bartend/
 	cp \
 	  ./docs/api.html \
 	  ./docs/bartend-model.svg \
-	  ./web/*.js \
 	  ./bartend/web
-	cp ./web/build.html ./bartend/web/index.html
-	tar -cvzf bartend.tgz bartend
-
-build : 
-	cd web ; \
-		vulcanize index.html > build.html
+	tar -czf bartend.tgz bartend
 
 clean:
 	rm -rf ./bin/* ./pkg/*

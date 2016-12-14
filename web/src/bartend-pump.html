@@ -1,5 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 
 <dom-module id="bartend-pump">
   <template strip-whitespace>
@@ -17,7 +20,15 @@
     }
     </style>
     <h1>Pump [[pump.id]]</h1>
-    <div class="content">[[pump.liquid]]</div>
+    <div class="content">
+      <paper-dropdown-menu id="liquid" on-iron-select="update" label="[[pump.liquid]]">
+        <paper-listbox class="dropdown-content">
+          <template is="dom-repeat" items="[[liquids]]">
+            <paper-item>[[item]]</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </div>
     <div>
       <paper-button raised on-click="on">On</paper-button>
       <paper-button raised on-click="off">Off</paper-button>
@@ -32,11 +43,10 @@
         pump: Object,
       },
 
-      _attached: function() {
-        this.url = bartend.apiUrl + '?fields=liquids' + this.pump.id + '/';
+      attached: function() {
         var self = this;
         var r = new XMLHttpRequest();
-        r.open("GET", bartend.apiUrl + "current", true);
+        r.open("GET", bartend.apiUrl + '?fields=liquids', true);
         r.onreadystatechange = function() {
           if (r.readyState === XMLHttpRequest.DONE) {
             if (r.status === 200) {
@@ -45,6 +55,12 @@
           }
         }; 
         r.send();        
+      },
+
+      update: function() {
+        var r = new XMLHttpRequest();
+        r.open("PUT", bartend.apiUrl + 'pump=' + this.pump.id, true);
+        r.send('{"liquid":"' + this.$.liquid.value + '"}');
       },
 
       on : function() {
@@ -59,9 +75,6 @@
         var r = new XMLHttpRequest();
         var cmd = on ? "on" : "off";
         r.open("POST", bartend.apiUrl + "pump=" + this.pump.id + "/" + cmd);
-        r.onreadystatechange = function () {
-          console.log("pump ", cmd);
-        }
         r.send();      
       }
     });

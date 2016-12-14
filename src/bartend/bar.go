@@ -233,7 +233,6 @@ func (self *AutoStep) update(t time.Duration) error {
 			return err
 		}
 		self.Complete = complete
-		c2.Debug.Printf("complete %v", self.Complete)
 	}
 	return nil
 }
