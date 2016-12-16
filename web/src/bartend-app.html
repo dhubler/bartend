@@ -44,7 +44,7 @@
         <div class="layout vertical" id="setup">            
             <template is="dom-repeat" items="{{data.pump}}">
                 <paper-card class="flex card">
-                    <bartend-pump pump="{{item}}"></bartend-pump>
+                    <bartend-pump pump="{{item}}" liquids="[[liquids]]"></bartend-pump>
                 </paper-card>
             </template>
         </div>
@@ -75,6 +75,17 @@
                 self._subscribe();
             };
             r.send();
+
+            var rl = new XMLHttpRequest();
+            rl.open("GET", bartend.apiUrl + '?fields=liquids', true);
+            rl.onreadystatechange = function() {
+                if (rl.readyState === XMLHttpRequest.DONE) {
+                    if (rl.status === 200) {
+                        self.liquids = JSON.parse(rl.responseText).liquids;
+                    }
+                }
+            }; 
+            rl.send();            
         },
 
         _subscribe: function() {

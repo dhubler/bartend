@@ -21,10 +21,10 @@
     </style>
     <h1>Pump [[pump.id]]</h1>
     <div class="content">
-      <paper-dropdown-menu id="liquid" on-iron-select="update" label="[[pump.liquid]]">
-        <paper-listbox class="dropdown-content">
+      <paper-dropdown-menu id="liquid" on-iron-select="update">
+        <paper-listbox class="dropdown-content" selected="[[pump.liquid]]" attr-for-selected="value">
           <template is="dom-repeat" items="[[liquids]]">
-            <paper-item>[[item]]</paper-item>
+            <paper-item value="[[item]]">[[item]]</paper-item>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
@@ -41,20 +41,7 @@
 
       properties : {
         pump: Object,
-      },
-
-      attached: function() {
-        var self = this;
-        var r = new XMLHttpRequest();
-        r.open("GET", bartend.apiUrl + '?fields=liquids', true);
-        r.onreadystatechange = function() {
-          if (r.readyState === XMLHttpRequest.DONE) {
-            if (r.status === 200) {
-                self.liquids = JSON.parse(r.responseText).liquids;
-            }
-          }
-        }; 
-        r.send();        
+        liquids: Array,
       },
 
       update: function() {
