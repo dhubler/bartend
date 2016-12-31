@@ -1,0 +1,14 @@
+[Unit]
+Description=Bartend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+RestartSec=10
+WorkingDirectory=/opt/bartend
+ExecStart=/opt/bartend/bin/bartend -config /opt/bartend/etc/bartend.cfg
+Environment=YANGPATH=/opt/bartend/etc/yang
+
+[Install]
+WantedBy=multi-user.target

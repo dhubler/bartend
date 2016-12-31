@@ -4,9 +4,9 @@ import (
 	"bartend"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/c2stack/c2g/meta"
 	"github.com/c2stack/c2g/meta/yang"
 	"github.com/c2stack/c2g/node"
 	"github.com/c2stack/c2g/restconf"
@@ -40,10 +40,11 @@ func main() {
 	if err := root.Root().InsertFrom(node.NewJsonReader(cfg).Node()).LastErr; err != nil {
 		panic(err)
 	}
-	rc := restconf.NewService(yangPath, root)
-	webPath := &meta.FileStreamSource{Root: "web"}
-	rc.SetDocRoot(webPath)
-	rc.SetRootRedirect("/ui/index.html")
-	rc.Port = *port
-	rc.Listen()
+	rc := restconf.NewManagement(yangPath, root)
+	rc.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir("web"))))
+	rc.Handle("/", http.RedirectHandler("/ui/index.html", http.StatusFound))
+	//rc.Handle("/ui/", stock.)
+	options := rc.Options()
+	options.Port = *port
+	rc.ApplyOptions(options)
 }

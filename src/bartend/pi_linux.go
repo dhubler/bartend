@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/kidoman/embd"
 	_ "github.com/kidoman/embd/host/rpi"
@@ -15,17 +16,16 @@ var openedPins map[int]embd.DigitalPin = make(map[int]embd.DigitalPin)
 
 func init() {
 	// On exit, turn off all pumps
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
-		for _ = range c {
-			fmt.Printf("\nClosing gpio")
-			for _, pin := range openedPins {
-				pin.Write(embd.High)
-			}
-			embd.CloseGPIO()
-			os.Exit(0)
+		<-c
+		fmt.Printf("\nClosing gpio")
+		for _, pin := range openedPins {
+			pin.Write(embd.High)
 		}
+		embd.CloseGPIO()
+		os.Exit(1)
 	}()
 }
 
