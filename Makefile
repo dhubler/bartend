@@ -25,7 +25,7 @@ TEST='Test*'
 test :
 	go test $(PKGS) -run $(TEST)
 
-archive : bartend-pi ./web/build.html
+archive : bartend-pi
 	! test -d bartend || rm -rf bartend
 	mkdir bartend
 	rsync -av ./bin/linux_arm/ ./bartend/bin/
