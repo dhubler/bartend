@@ -129,7 +129,7 @@
 
       _subscribe: function() {    
           var self = this;
-          this.sub = bartend.wsocket().on('bartend-drink', 'current/update', function(update) {
+          this.sub = bartend.wsocket().on('bartend-drink', 'current/update', 'bartend', function(update) {
               var autoComplete = true;
               for (var i = 0; i < update.auto.length; i++) {
                 self.drink.auto[i].percentComplete = update.auto[i].percentComplete;

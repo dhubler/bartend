@@ -82,7 +82,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 			switch r.Meta.GetIdent() {
 			case "update":
 				sub := app.OnDrinkUpdate(func(d *Drink) {
-					r.Stream.Notify(r.Meta, r.Selection.Path, currentDrinkNode(app))
+					r.Send(r.Context, currentDrinkNode(app))
 				})
 				return sub.Close, nil
 			}

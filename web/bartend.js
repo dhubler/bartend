@@ -1,7 +1,11 @@
 var bartend = {};
 
-bartend.apiUrl = '/restconf/';
-bartend.wsUrl = 'ws://' + document.location.host + '/restsock/';
+var pathRx = /(.*)\/ui\/.*/;
+console.log(document.location.pathname);
+var pathMatch = pathRx.exec(document.location.pathname);
+var path = pathMatch[1];
+bartend.wsUrl = 'ws://' + document.location.host + '/restconf/streams';
+bartend.apiUrl = '/restconf/data/bartend:';
 
 bartend.wsocket = function() {
     if (bartend._wsocket == null) {

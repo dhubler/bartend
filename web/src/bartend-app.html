@@ -92,7 +92,7 @@
         _subscribe: function() {
             var self = this;
             var complete = false;
-            bartend.wsocket().on('bartend-app', 'current/update', function(update) {
+            bartend.wsocket().on('bartend-app', 'current/update', 'bartend', function(update) {
                 if (update == null) {
                     return
                 }
