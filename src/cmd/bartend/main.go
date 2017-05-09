@@ -33,7 +33,7 @@ func main() {
 	rc := restconf.NewManagement(device)
 	device.Add("restconf", restconf.Node(rc))
 
-	if err := device.ApplyStartupConfig(*configFileName); err != nil {
+	if err := device.ApplyStartupConfigFile(*configFileName); err != nil {
 		panic(err)
 	}
 
