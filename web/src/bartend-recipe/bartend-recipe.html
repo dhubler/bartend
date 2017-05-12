@@ -1,8 +1,12 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
-<link rel="import" href="bartend-drink.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../bartend-drink/bartend-drink.html">
 
+<!--
+    `<bartend-recipe>` - Show an individual recipe. Launch point for actually 
+      making the drink.
+-->    
 <dom-module id="bartend-recipe">
   <template strip-whitespace>
     <style>
@@ -67,19 +71,34 @@
       is : 'bartend-recipe',
       
       properties : {
+
+        /**
+         * recipe object from REST API
+         */
         recipe  : {
           type : Object
         }
       },
 
+      /**
+       * pour just a sample of this recipe into the glass
+       */
       sample: function() {
         this.scale(0.1);
       },
 
+      /**
+       * make this recipe
+       */
       make : function() {
         this.scale(1);
       },
 
+      /**
+       * make a scaled up or down version of this recipe
+       * 
+       * @param {number} e.g. 0.1 for sample, 2 for a double
+       */
       scale: function(multiplier) {
         this.$.drink.toggle();
         this.$.drink.start(multiplier);        

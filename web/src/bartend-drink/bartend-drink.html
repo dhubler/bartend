@@ -1,8 +1,12 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
-<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-shared-styles.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-shared-styles.html">
 
+<!--
+    `<bartend-drink>` - As a drink is being poured, keep the user informed
+        of the progress.
+-->    
 <dom-module id="bartend-drink">
     <template>
         <style include="paper-dialog-shared-styles"></style>
@@ -66,6 +70,10 @@
       ],
 
       properties : {
+
+        /**
+         * Recipe object from REST API
+         */  
         recipe  : {
           type : Object
         }
@@ -76,6 +84,11 @@
         this.sub = null;
       },
 
+      /**
+       * Start making the drink.
+       *
+       * @param {number} recipe multiplier. e.g. a double is 2, a sample is 0.1
+       */
       start: function(scale) {
         var self = this;
         this.$.steps.selected = 0;
@@ -112,6 +125,9 @@
         r.send();       
       },
 
+      /**
+       * Stop making the drink in progress.
+       */
       stop: function() {
         var self = this;
         var r = new XMLHttpRequest();
@@ -129,7 +145,11 @@
 
       _subscribe: function() {    
           var self = this;
-          this.sub = bartend.wsocket().on('bartend-drink', 'current/update', 'bartend', function(update) {
+          this.sub = bartend.wsocket().on('bartend-drink', 'current/update', 'bartend', function(update, err) {
+              if (err != null) {
+                  console.log(err);
+                  return
+              }
               var autoComplete = true;
               for (var i = 0; i < update.auto.length; i++) {
                 self.drink.auto[i].percentComplete = update.auto[i].percentComplete;

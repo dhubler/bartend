@@ -16,6 +16,8 @@
     "paper-dropdown-menu": "^1.4.3",
     "paper-listbox": "^1.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.9"
+  },
   "ignore": []
 }

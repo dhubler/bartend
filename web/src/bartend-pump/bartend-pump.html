@@ -1,9 +1,12 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
+<!--
+    `<bartend-pump>` - Show an individual pump and it's controls.
+-->    
 <dom-module id="bartend-pump">
   <template strip-whitespace>
     <style>
@@ -21,7 +24,7 @@
     </style>
     <h1>Pump [[pump.id]]</h1>
     <div class="content">
-      <paper-dropdown-menu id="liquid" on-iron-select="update">
+      <paper-dropdown-menu id="liquid" on-iron-select="_update">
         <paper-listbox class="dropdown-content" selected="[[pump.liquid]]" attr-for-selected="value">
           <template is="dom-repeat" items="[[liquids]]">
             <paper-item value="[[item]]">[[item]]</paper-item>
@@ -40,20 +43,34 @@
       is: 'bartend-pump',
 
       properties : {
+
+        /**
+         * Pump object from REST API
+         */
         pump: Object,
+
+        /**
+         * List of strings containing all the distinct liquids from all recipes
+         */
         liquids: Array,
       },
 
-      update: function() {
+      _update: function() {
         var r = new XMLHttpRequest();
         r.open("PUT", bartend.apiUrl + 'pump=' + this.pump.id, true);
         r.send('{"liquid":"' + this.$.liquid.value + '"}');
       },
 
+      /**
+       * turn this pump on
+       */
       on : function() {
         this._enable(true);
       },
 
+      /**
+       * turn this pump off
+       */
       off : function() {
         this._enable(false);
       },

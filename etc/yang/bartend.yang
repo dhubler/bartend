@@ -1,102 +1,156 @@
 module bartend {
   namespace "";
   prefix "";
+  description "Bartender is an app that will mix a drink by turning on a set of hardware pumps";
   revision 0;
 
   list pump {
+    description "direct access to hardware pumps";
+
     key "id";
+    
     leaf id {
+      description "ids from 0-8 for the installed pumps";
       type int32;
     }
+
     leaf gpioPin {
+      description "Raspberry PI GPIO pin number. Do not change unless you're rewired your Pi.";
     	type int32;
     }
+
     leaf timeToVolumeRatioMs {
-      description "Number of millisecs to turn on pump to pour one milliliter";
+      description "number of millisecs to turn on pump to pour one milliliter";
       type int32;
     }
+
     leaf liquid {
+      description "name of the liquid. If name does not match (case sensitive) recipe 
+        ingredient exactly, it will not recognized as same liquid.";
       type string;
     }
 
     action on {
         description "turn on the pump";
     }
+
     action off {
         description "turn off the pump";
     }
   }
 
   leaf-list liquids {
+    description "all the unique liquids found across all recipes";
     config "false";
     type string;
   }
 
   grouping ingredient {
+
     leaf liquid {
+      description "liquid name. If name does not match (case sensitive) pump 
+        liquid exactly, it will not recognized as same liquid.";
       type string;
     }
+
     leaf amount {
+      description "in ounces of liquid";
       type decimal64;
     }
+
     leaf weight {
+      description "in grams of liquid determined by amount and estimate of grams per ounce";
       config "false";
       type int32;
     }
   }
 
   grouping drink {
+
     leaf id {
+      description "unique id for this recipe";
       type int32;
     }
+
     leaf name {
+      description "name of recipe";
       type string;
     }
+
     leaf description {
+      description "description of recipe";
       type string;
     }
+
     list ingredient {
+      description "ingredients for recipe";
       key "liquid";
       uses ingredient;
     }
   }
 
   container current {
+    description "current drink recipe in progress";
     config "false";
+
     leaf percentComplete {
+      description "0-100 percent complete with drink";
       type int32;
     }
+
     leaf complete {
+      description "true if drink has finished being made";
       type boolean;
     }
 
     list auto {
+      description "ingredients from recipe that are available in the pumps and would
+        be poured automatically";
       key "id";
+
       leaf id {
+        description "unique id for this ingredient";
         type int32;
       }
+
       container ingredient {
+        description "liquid ingredient";
+
         uses ingredient;        
       }
+
       leaf complete {
+        description "is this liquid done pouring";
         type boolean;
       }
+
       leaf percentComplete {
+        description "what percentage is this liquid complete pouring";
         type int32;
       }
     }
 
     list manual {
+      description "ingredients from recipe that are not available in the pumps and would
+        need to be poured manually by user";
+
       key "id";
+
       leaf id {
+        description "unique id for this ingredient";
         type int32;
       }
+
       container ingredient {
+        description "liquid ingredient";
         uses ingredient;        
       }
+
       leaf complete {
+        description "is this liquid done pouring";
         type boolean;
       }
+
       action done {
         description "mark step done";
         input {
@@ -105,30 +159,50 @@ module bartend {
     }    
 
     notification update {
+      description "";
+
       leaf percentComplete {
+        description "0-100 percent of how far along is this drink done making";
         type int32;
       }
+
       leaf complete {
+        description "is this drink ready for drinking";
         type boolean;
       }
+
       list manual {
+        description "ingredients that should be poured manually";
+
         key "id";
+
         leaf id {
+          description "unique id for this ingredient";
           type int32;
         }
+
         leaf complete {
+          description "is this ingredient done pouring";
           type boolean;
         }
       }
+
       list auto {
         key "id";
+        description "ingredients that should be poured automatically";
+
         leaf id {
+          description "unique id for this ingredient";
           type int32;
         }
+
         leaf complete {
+          description "is this ingredient done pouring";
           type boolean;
         }
+
         leaf percentComplete {
+          description "0-100 percent of how far along is this ingredient is done pouring";
           type int32;
         }
       }
@@ -140,9 +214,14 @@ module bartend {
   }
 
   list recipe {
+    description "available list of drinks known to this bartender";
+
     key "id";
     uses drink;
+
     action make {
+      description "make this drink";
+
     	input {
     		leaf multiplier {
     			description "Optional, make it a double by passing 2";

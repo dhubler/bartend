@@ -1,14 +1,19 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="bartend-recipe.html">
-<link rel="import" href="bartend-pump.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bartend-recipe/bartend-recipe.html">
+<link rel="import" href="../bartend-pump/bartend-pump.html">
 
+<!--
+    `<bartend-app>` show all recipes and pumps from bartender machine.
+        You only need one of these per application and it accepts no 
+        parameters.
+-->    
 <dom-module id="bartend-app">
   <template>
     <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
@@ -29,21 +34,21 @@
         background-color: #2196f3;
     }
     </style>
-    <paper-tabs id="menu" selected="{{selected}}">
+    <paper-tabs id="menu" selected="{{_selected}}">
         <paper-tab link><a href="#recipes" class="link" tabindex="-1">Recipes</a></paper-tab>
         <paper-tab link><a href="#setup" class="link" tabindex="-1">Setup</a></paper-tab>
     </paper-tabs>
     <paper-toast id="msg"></paper-toast>
-    <iron-pages selected="{{selected}}">
+    <iron-pages selected="{{_selected}}">
         <div class="layout vertical" id="recipes">
-            <template is="dom-repeat" items="{{data.recipe}}">
+            <template is="dom-repeat" items="{{_data.recipe}}">
                 <paper-card class="flex card">
                     <bartend-recipe recipe="{{item}}"></bartend-recipe>
                 </paper-card>
             </template>
         </div>
         <div class="layout vertical" id="setup">            
-            <template is="dom-repeat" items="{{data.pump}}">
+            <template is="dom-repeat" items="{{_data.pump}}">
                 <paper-card class="flex card">
                     <bartend-pump pump="{{item}}" liquids="[[liquids]]"></bartend-pump>
                 </paper-card>
@@ -55,28 +60,32 @@
     Polymer({
         is: 'bartend-app',
         properties: {
-            selected : {
+            _selected : {
                 type: Number,
                 value: 0
             },
-            data : {
+            _data : {
                 type: Object
             }
         },
 
+        // when component is added to DOM
         attached: function() {
             var self = this;
             var r = new XMLHttpRequest();
+
+            // download all recipes and pumps
             r.open("GET", bartend.apiUrl, true);
             r.onreadystatechange = function () {
                 if (r.readyState != 4 || r.status != 200) {
                     return;
                 }
-                self.data = JSON.parse(r.responseText);
+                self._data = JSON.parse(r.responseText);
                 self._subscribe();
             };
             r.send();
 
+            // download just unique list of liquids
             var rl = new XMLHttpRequest();
             rl.open("GET", bartend.apiUrl + '?fields=liquids', true);
             rl.onreadystatechange = function() {
@@ -89,10 +98,15 @@
             rl.send();            
         },
 
+        // watch bartender for drink updates
         _subscribe: function() {
             var self = this;
             var complete = false;
-            bartend.wsocket().on('bartend-app', 'current/update', 'bartend', function(update) {
+            bartend.wsocket().on('bartend-app', 'current/update', 'bartend', function(update, err) {
+                if (err != null) {
+                    console.log(err);
+                    return
+                }                
                 if (update == null) {
                     return
                 }
