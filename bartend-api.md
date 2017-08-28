@@ -3,7 +3,7 @@
 # Bartend
 
 
-## <a name="/bartend"></a>/
+## <a name=""></a>/
 Bartender is an app that will mix a drink by turning on a set of hardware pumps
 
 
@@ -14,7 +14,7 @@ Bartender is an app that will mix a drink by turning on a set of hardware pumps
 * **liquids** `string[]` - all the unique liquids found across all recipes. 
 
   
-* **[current{…}](#/current)** - current drink recipe in progress. 
+* **[current](#/current)** - current drink recipe in progress. 
 
   
 * **[recipe[…]](#/recipe)** - available list of drinks known to this bartender. 
@@ -25,7 +25,7 @@ Bartender is an app that will mix a drink by turning on a set of hardware pumps
 
 
 
-## <a name="/pump"></a>/pump
+## <a name="/pump"></a>/pump={id}/
 direct access to hardware pumps
 
 
@@ -40,7 +40,7 @@ direct access to hardware pumps
 
   
 * **liquid** `string` - name of the liquid. If name does not match (case sensitive) recipe 
-        ingredient exactly, it will not recognized as same liquid.. 
+ingredient exactly, it will not recognized as same liquid.. 
 
 
 
@@ -67,7 +67,7 @@ direct access to hardware pumps
 
 
 
-## <a name="/current"></a>/current
+## <a name="/current"></a>/current/
 current drink recipe in progress
 
 
@@ -79,11 +79,11 @@ current drink recipe in progress
 
   
 * **[auto[…]](#/current/auto)** - ingredients from recipe that are available in the pumps and would
-        be poured automatically. 
+be poured automatically. 
 
   
 * **[manual[…]](#/current/manual)** - ingredients from recipe that are not available in the pumps and would
-        need to be poured manually by user. 
+need to be poured manually by user. 
 
 
 
@@ -104,32 +104,31 @@ current drink recipe in progress
 
 * <a name="/current/update"></a>**/current/update** - 
 
-  
->
-* **percentComplete** `int32` - 0-100 percent of how far along is this drink done making
-* **complete** `boolean` - is this drink ready for drinking
-* **manual[…]** `` - ingredients that should be poured manually
-    * **id** - unique id for this ingredient 
-    * **complete** - is this ingredient done pouring 
-* **auto[…]** `` - ingredients that should be poured automatically
-    * **id** - unique id for this ingredient 
-    * **complete** - is this ingredient done pouring 
-    * **percentComplete** - 0-100 percent of how far along is this ingredient is done pouring 
+ 	
+> * **percentComplete** `int32` - 0-100 percent of how far along is this drink done making	
+> * **complete** `boolean` - is this drink ready for drinking
+> * **manual[…]** - ingredients that should be poured manually
+>     * **id** - unique id for this ingredient 
+>     * **complete** - is this ingredient done pouring 
+> * **auto[…]** - ingredients that should be poured automatically
+>     * **id** - unique id for this ingredient 
+>     * **complete** - is this ingredient done pouring 
+>     * **percentComplete** - 0-100 percent of how far along is this ingredient is done pouring 
 
 
 
 
 
-## <a name="/current/auto"></a>/current/auto
+## <a name="/current/auto"></a>/current/auto={id}/
 ingredients from recipe that are available in the pumps and would
-        be poured automatically
+be poured automatically
 
 
   
 * **id** `int32` - unique id for this ingredient. 
 
   
-* **[ingredient{…}](#/current/auto={id}/ingredient)** - liquid ingredient. 
+* **[ingredient](#/current/auto/ingredient)** - liquid ingredient. 
 
   
 * **complete** `boolean` - is this liquid done pouring. 
@@ -143,13 +142,13 @@ ingredients from recipe that are available in the pumps and would
 
 
 
-## <a name="/current/auto={id}/ingredient"></a>/current/auto={id}/ingredient
+## <a name="/current/auto/ingredient"></a>/current/auto={id}/ingredient/
 liquid ingredient
 
 
   
 * **liquid** `string` - liquid name. If name does not match (case sensitive) pump 
-        liquid exactly, it will not recognized as same liquid.. 
+liquid exactly, it will not recognized as same liquid.. 
 
   
 * **amount** `decimal64` - in ounces of liquid. 
@@ -163,16 +162,16 @@ liquid ingredient
 
 
 
-## <a name="/current/manual"></a>/current/manual
+## <a name="/current/manual"></a>/current/manual={id}/
 ingredients from recipe that are not available in the pumps and would
-        need to be poured manually by user
+need to be poured manually by user
 
 
   
 * **id** `int32` - unique id for this ingredient. 
 
   
-* **[ingredient{…}](#/current/manual={id}/ingredient)** - liquid ingredient. 
+* **[ingredient](#/current/manual/ingredient)** - liquid ingredient. 
 
   
 * **complete** `boolean` - is this liquid done pouring. 
@@ -194,13 +193,13 @@ ingredients from recipe that are not available in the pumps and would
 
 
 
-## <a name="/current/manual={id}/ingredient"></a>/current/manual={id}/ingredient
+## <a name="/current/manual/ingredient"></a>/current/manual={id}/ingredient/
 liquid ingredient
 
 
   
 * **liquid** `string` - liquid name. If name does not match (case sensitive) pump 
-        liquid exactly, it will not recognized as same liquid.. 
+liquid exactly, it will not recognized as same liquid.. 
 
   
 * **amount** `decimal64` - in ounces of liquid. 
@@ -214,7 +213,7 @@ liquid ingredient
 
 
 
-## <a name="/recipe"></a>/recipe
+## <a name="/recipe"></a>/recipe={id}/
 available list of drinks known to this bartender
 
 
@@ -228,7 +227,7 @@ available list of drinks known to this bartender
 * **description** `string` - description of recipe. 
 
   
-* **[ingredient[…]](#/recipe={id}/ingredient)** - ingredients for recipe. 
+* **[ingredient[…]](#/recipe/ingredient)** - ingredients for recipe. 
 
 
 
@@ -238,8 +237,7 @@ available list of drinks known to this bartender
  
   
 #### Input:
->
-* **multiplier** `decimal64` - Optional, make it a double by passing 2
+> * **multiplier** `decimal64` - Optional, make it a double by passing 2
 
 
   
@@ -250,13 +248,13 @@ available list of drinks known to this bartender
 
 
 
-## <a name="/recipe={id}/ingredient"></a>/recipe={id}/ingredient
+## <a name="/recipe/ingredient"></a>/recipe={id}/ingredient={liquid}/
 ingredients for recipe
 
 
   
 * **liquid** `string` - liquid name. If name does not match (case sensitive) pump 
-        liquid exactly, it will not recognized as same liquid.. 
+liquid exactly, it will not recognized as same liquid.. 
 
   
 * **amount** `decimal64` - in ounces of liquid. 

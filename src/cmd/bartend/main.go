@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/c2stack/c2g/conf"
+	"github.com/c2stack/c2g/device"
+
 	"github.com/c2stack/c2g/meta"
 	"github.com/c2stack/c2g/meta/yang"
 	"github.com/c2stack/c2g/restconf"
@@ -26,14 +27,12 @@ func main() {
 	app := bartend.NewBartend()
 
 	web := &meta.FileStreamSource{Root: "web"}
-	ypath := yang.YangPath()
-	device := conf.NewLocalDeviceWithUi(ypath, web)
-	device.Add("bartend", bartend.Node(app))
+	d := device.NewWithUi(yang.YangPath(), web)
+	d.Add("bartend", bartend.Node(app))
 
-	rc := restconf.NewManagement(device)
-	device.Add("restconf", restconf.Node(rc))
+	restconf.NewServer(d)
 
-	if err := device.ApplyStartupConfigFile(*configFileName); err != nil {
+	if err := d.ApplyStartupConfigFile(*configFileName); err != nil {
 		panic(err)
 	}
 

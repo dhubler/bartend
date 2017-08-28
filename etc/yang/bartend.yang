@@ -1,8 +1,8 @@
 module bartend {
   namespace "";
   prefix "";
-  description "Bartender is an app that will mix a drink by turning on a set of hardware pumps";
   revision 0;
+  description "Bartender is an app that will mix a drink by turning on a set of hardware pumps";
 
   list pump {
     description "direct access to hardware pumps";

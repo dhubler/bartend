@@ -1,1 +1,1 @@
-../src/vendor/github.com/c2stack/c2g/examples/proxy/notify.js
+../src/vendor/github.com/c2stack/c2g/examples/intro/notify.js

@@ -5,11 +5,13 @@ import (
 	"reflect"
 
 	"github.com/c2stack/c2g/node"
+	"github.com/c2stack/c2g/nodes"
+	"github.com/c2stack/c2g/val"
 )
 
 // Node is management for bartend app
 func Node(app *Bartend) node.Node {
-	return &node.MyNode{
+	return &nodes.Basic{
 		OnChild: func(r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "pump":
@@ -42,7 +44,7 @@ func Node(app *Bartend) node.Node {
 		OnField: func(r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.GetIdent() {
 			case "liquids":
-				hnd.Val = &node.Value{Strlist: DistinctLiquids(app.Recipes)}
+				hnd.Val = val.StringList(DistinctLiquids(app.Recipes))
 			}
 			return nil
 		},
@@ -50,8 +52,8 @@ func Node(app *Bartend) node.Node {
 }
 
 func currentDrinkNode(app *Bartend) node.Node {
-	return &node.Extend{
-		Node: node.ReflectNode(app.Current),
+	return &nodes.Extend{
+		Base: nodes.Reflect(app.Current),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "auto":
@@ -70,9 +72,9 @@ func currentDrinkNode(app *Bartend) node.Node {
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.GetIdent() {
 			case "percentComplete":
-				hnd.Val = &node.Value{Int: app.Current.PercentComplete()}
+				hnd.Val = val.Int32(app.Current.PercentComplete())
 			case "complete":
-				hnd.Val = &node.Value{Bool: app.Current.Complete()}
+				hnd.Val = val.Bool(app.Current.Complete())
 			default:
 				return p.Field(r, hnd)
 			}
@@ -82,7 +84,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 			switch r.Meta.GetIdent() {
 			case "update":
 				sub := app.OnDrinkUpdate(func(d *Drink) {
-					r.Send(r.Context, currentDrinkNode(app))
+					r.Send(currentDrinkNode(app))
 				})
 				return sub.Close, nil
 			}
@@ -99,23 +101,26 @@ func currentDrinkNode(app *Bartend) node.Node {
 }
 
 func manualNodes(steps []*ManualStep) node.Node {
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var step *ManualStep
 			key := r.Key
 			var id int
 			if key != nil {
-				id := key[0].Int
+				id := key[0].Value().(int)
 				if id < len(steps) {
 					step = steps[id]
 				}
 			} else if r.Row < len(steps) {
 				id = r.Row
 				step = steps[id]
-				key = node.SetValues(r.Meta.KeyMeta(), id)
+				var err error
+				if key, err = node.NewValues(r.Meta.KeyMeta(), id); err != nil {
+					return nil, nil, err
+				}
 			}
 			if step != nil {
-				return stepNode(node.ReflectNode(step), id, step.Ingredient), key, nil
+				return stepNode(nodes.Reflect(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -123,23 +128,26 @@ func manualNodes(steps []*ManualStep) node.Node {
 }
 
 func autoNodes(steps []*AutoStep) node.Node {
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var step *AutoStep
 			key := r.Key
 			var id int
 			if key != nil {
-				id = key[0].Int
+				id = key[0].Value().(int)
 				if id < len(steps) {
 					step = steps[id]
 				}
 			} else if r.Row < len(steps) {
 				id = r.Row
 				step = steps[id]
-				key = node.SetValues(r.Meta.KeyMeta(), id)
+				var err error
+				if key, err = node.NewValues(r.Meta.KeyMeta(), id); err != nil {
+					return nil, nil, err
+				}
 			}
 			if step != nil {
-				return stepNode(node.ReflectNode(step), id, step.Ingredient), key, nil
+				return stepNode(nodes.Reflect(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -147,12 +155,12 @@ func autoNodes(steps []*AutoStep) node.Node {
 }
 
 func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
-	return &node.Extend{
-		Node: base,
+	return &nodes.Extend{
+		Base: base,
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.GetIdent() {
 			case "id":
-				hnd.Val = &node.Value{Int: id}
+				hnd.Val = val.Int32(id)
 			default:
 				return p.Field(r, hnd)
 			}
@@ -169,8 +177,8 @@ func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
 }
 
 func pumpsNode(app *Bartend) node.Node {
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var p *Pump
 			row := int(r.Row)
 			key := r.Key
@@ -179,7 +187,7 @@ func pumpsNode(app *Bartend) node.Node {
 				p = &Pump{}
 				app.Pumps = append(app.Pumps, p)
 			} else if key != nil {
-				if row = key[0].Int; row < len(app.Pumps) {
+				if row = key[0].Value().(int); row < len(app.Pumps) {
 					p = app.Pumps[row]
 				}
 			} else if row < len(app.Pumps) {
@@ -187,7 +195,11 @@ func pumpsNode(app *Bartend) node.Node {
 			}
 			if p != nil {
 				if key == nil {
-					key = node.SetValues(r.Meta.KeyMeta(), row)
+					if k, err := node.NewValues(r.Meta.KeyMeta(), row); err != nil {
+						return nil, nil, err
+					} else {
+						key = k
+					}
 				}
 				return pumpNode(p), key, nil
 			}
@@ -201,20 +213,23 @@ func recipesNode(app *Bartend, recipes map[int]*Recipe) node.Node {
 	index.Sort(func(a, b reflect.Value) bool {
 		return a.Int() < b.Int()
 	})
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var recipe *Recipe
 			key := r.Key
 			if r.New {
-				recipe = &Recipe{Id: r.Key[0].Int}
+				recipe = &Recipe{Id: r.Key[0].Value().(int)}
 				recipes[recipe.Id] = recipe
 			} else if key != nil {
-				recipe = recipes[key[0].Int]
+				recipe = recipes[key[0].Value().(int)]
 			} else {
 				v := index.NextKey(r.Row)
 				if v != node.NO_VALUE {
 					id := int(v.Int())
-					key = node.SetValues(r.Meta.KeyMeta(), id)
+					var err error
+					if key, err = node.NewValues(r.Meta.KeyMeta(), id); err != nil {
+						return nil, nil, err
+					}
 					recipe = recipes[id]
 				}
 			}
@@ -227,18 +242,21 @@ func recipesNode(app *Bartend, recipes map[int]*Recipe) node.Node {
 }
 
 func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var recipe *Recipe
 			row := int(r.Row)
 			key := r.Key
 			if key != nil {
-				if row = key[0].Int; row < len(drinks) {
+				if row = key[0].Value().(int); row < len(drinks) {
 					recipe = drinks[row]
 				}
 			} else if row < len(drinks) {
 				recipe = drinks[row]
-				key = node.SetValues(r.Meta.KeyMeta(), row)
+				var err error
+				if key, err = node.NewValues(r.Meta.KeyMeta(), row); err != nil {
+					return nil, nil, err
+				}
 			}
 			if recipe != nil {
 				return recipeNode(app, recipe), key, nil
@@ -249,8 +267,8 @@ func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
 }
 
 func recipeNode(app *Bartend, recipe *Recipe) node.Node {
-	return &node.Extend{
-		Node: node.ReflectNode(recipe),
+	return &nodes.Extend{
+		Base: nodes.Reflect(recipe),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "ingredient":
@@ -271,7 +289,7 @@ func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 					if scaleVal, err := r.Input.GetValue("multiplier"); err != nil {
 						return nil, err
 					} else {
-						scale = scaleVal.Float
+						scale = scaleVal.Value().(float64)
 					}
 				}
 				if err := app.MakeDrink(recipe, scale); err != nil {
@@ -285,8 +303,8 @@ func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 }
 
 func ingredientsNode(recipe *Recipe) node.Node {
-	return &node.MyNode{
-		OnNext: func(r node.ListRequest) (node.Node, []*node.Value, error) {
+	return &nodes.Basic{
+		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var ingredient *Ingredient
 			var key = r.Key
 			if r.New {
@@ -294,14 +312,17 @@ func ingredientsNode(recipe *Recipe) node.Node {
 				recipe.Ingredients = append(recipe.Ingredients, ingredient)
 			} else if key != nil {
 				for _, candidate := range recipe.Ingredients {
-					if candidate.Liquid == key[0].Str {
+					if candidate.Liquid == key[0].String() {
 						ingredient = candidate
 						break
 					}
 				}
 			} else if r.Row < len(recipe.Ingredients) {
 				ingredient = recipe.Ingredients[r.Row]
-				key = node.SetValues(r.Meta.KeyMeta(), ingredient.Liquid)
+				var err error
+				if key, err = node.NewValues(r.Meta.KeyMeta(), ingredient.Liquid); err != nil {
+					return nil, nil, err
+				}
 			}
 			if ingredient != nil {
 				return ingredientNode(ingredient), key, nil
@@ -312,12 +333,12 @@ func ingredientsNode(recipe *Recipe) node.Node {
 }
 
 func ingredientNode(ingredient *Ingredient) node.Node {
-	return &node.Extend{
-		Node: node.ReflectNode(ingredient),
+	return &nodes.Extend{
+		Base: nodes.Reflect(ingredient),
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.GetIdent() {
 			case "weight":
-				hnd.Val = &node.Value{Int: ingredient.Weight()}
+				hnd.Val = val.Int32(ingredient.Weight())
 			default:
 				return p.Field(r, hnd)
 			}
@@ -327,8 +348,8 @@ func ingredientNode(ingredient *Ingredient) node.Node {
 }
 
 func pumpNode(pump *Pump) node.Node {
-	return &node.Extend{
-		Node: node.ReflectNode(pump),
+	return &nodes.Extend{
+		Base: nodes.Reflect(pump),
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
 			switch r.Meta.GetIdent() {
 			case "on", "off":

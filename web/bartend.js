@@ -1,9 +1,8 @@
+'use strict';
 var bartend = {};
 
-var pathRx = /(.*)\/ui\/.*/;
-console.log(document.location.pathname);
-var pathMatch = pathRx.exec(document.location.pathname);
-var path = pathMatch[1];
+var slash = document.location.pathname.lastIndexOf("/ui/");
+var path = document.location.pathname.substring(0, slash);
 bartend.wsUrl = 'ws://' + document.location.host + '/restconf/streams';
 bartend.apiUrl = '/restconf/data/bartend:';
 

@@ -230,14 +230,14 @@ hr {
   <summary>Index</summary>
 <ul>
 
-<li class="def"><a href="#%2fbartend">/</a></li>
+<li class="def"><a href="#">/</a></li>
 
 
 
 
 
 
-<li class="def"><a href="#%2fpump">/pump</a></li>
+<li class="def"><a href="#%2fpump">/pump={id}/</a></li>
 
 
 <li class="action"><a href="#%2fpump%2fon">/pump={id}/on</a></li>
@@ -248,7 +248,7 @@ hr {
 
 
 
-<li class="def"><a href="#%2fcurrent">/current</a></li>
+<li class="def"><a href="#%2fcurrent">/current/</a></li>
 
 
 <li class="action"><a href="#%2fcurrent%2fstop">/current/stop</a></li>
@@ -259,21 +259,21 @@ hr {
 
 
 
-<li class="def"><a href="#%2fcurrent%2fauto">/current/auto</a></li>
+<li class="def"><a href="#%2fcurrent%2fauto">/current/auto={id}/</a></li>
 
 
 
 
 
 
-<li class="def"><a href="#%2fcurrent%2fauto%3d%7bid%7d%2fingredient">/current/auto={id}/ingredient</a></li>
+<li class="def"><a href="#%2fcurrent%2fauto%2fingredient">/current/auto={id}/ingredient/</a></li>
 
 
 
 
 
 
-<li class="def"><a href="#%2fcurrent%2fmanual">/current/manual</a></li>
+<li class="def"><a href="#%2fcurrent%2fmanual">/current/manual={id}/</a></li>
 
 
 <li class="action"><a href="#%2fcurrent%2fmanual%2fdone">/current/manual={id}/done</a></li>
@@ -282,14 +282,14 @@ hr {
 
 
 
-<li class="def"><a href="#%2fcurrent%2fmanual%3d%7bid%7d%2fingredient">/current/manual={id}/ingredient</a></li>
+<li class="def"><a href="#%2fcurrent%2fmanual%2fingredient">/current/manual={id}/ingredient/</a></li>
 
 
 
 
 
 
-<li class="def"><a href="#%2frecipe">/recipe</a></li>
+<li class="def"><a href="#%2frecipe">/recipe={id}/</a></li>
 
 
 <li class="action"><a href="#%2frecipe%2fmake">/recipe={id}/make</a></li>
@@ -298,7 +298,7 @@ hr {
 
 
 
-<li class="def"><a href="#%2frecipe%3d%7bid%7d%2fingredient">/recipe={id}/ingredient</a></li>
+<li class="def"><a href="#%2frecipe%2fingredient">/recipe={id}/ingredient={liquid}/</a></li>
 
 
 
@@ -309,7 +309,7 @@ hr {
 </details>
 
 
-	<h2 class="def"><a name="/bartend"></a>/<span class="metalist"></span></h2>
+	<h2 class="def"><a name=""></a>/<span class="metalist"></span></h2>
 	<p>Bartender is an app that will mix a drink by turning on a set of hardware pumps</p>
 
         
@@ -321,7 +321,7 @@ hr {
 	
 
         
-	<code><strong><a href="#%2fcurrent">current{…}</strong></a> - current drink recipe in progress <span class="fieldDetails"></span></code>
+	<code><strong><a href="#%2fcurrent">current</strong></a> - current drink recipe in progress <span class="fieldDetails"></span></code>
         
 
         
@@ -332,7 +332,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/pump"></a>/<span class="metalist">pump</span></h2>
+	<h2 class="def"><a name="/pump"></a>/<span class="metalist">pump={id}</span></h2>
 	<p>direct access to hardware pumps</p>
 
         
@@ -417,12 +417,12 @@ hr {
 		
 			
 	                    <code class="expandContainer"><details class="expandable"
-	                    ><summary><strong>manual[…]</strong>  - ingredients that should be poured manually</summary><div style="margin: 2px 0 0 10px;"><strong>id</strong> int32 - unique id for this ingredient <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>complete</strong> boolean - is this ingredient done pouring <span class="fieldDetails"></span></div></details></code>
+	                    ><summary><strong>manual[…]</strong>  - ingredients that should be poured manually</summary><div style="margin: 2px 0 0 20px;"><strong>id</strong> int32 - unique id for this ingredient <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 20px;"><strong>complete</strong> boolean - is this ingredient done pouring <span class="fieldDetails"></span></div></details></code>
 			
 		
 			
 	                    <code class="expandContainer"><details class="expandable"
-	                    ><summary><strong>auto[…]</strong>  - ingredients that should be poured automatically</summary><div style="margin: 2px 0 0 10px;"><strong>id</strong> int32 - unique id for this ingredient <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>complete</strong> boolean - is this ingredient done pouring <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 10px;"><strong>percentComplete</strong> int32 - 0-100 percent of how far along is this ingredient is done pouring <span class="fieldDetails"></span></div></details></code>
+	                    ><summary><strong>auto[…]</strong>  - ingredients that should be poured automatically</summary><div style="margin: 2px 0 0 20px;"><strong>id</strong> int32 - unique id for this ingredient <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 20px;"><strong>complete</strong> boolean - is this ingredient done pouring <span class="fieldDetails"></span></div><div style="margin: 2px 0 0 20px;"><strong>percentComplete</strong> int32 - 0-100 percent of how far along is this ingredient is done pouring <span class="fieldDetails"></span></div></details></code>
 			
 		
 	
@@ -431,7 +431,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/current/auto"></a>/current/<span class="metalist">auto</span></h2>
+	<h2 class="def"><a name="/current/auto"></a>/current/<span class="metalist">auto={id}</span></h2>
 	<p>ingredients from recipe that are available in the pumps and would
         be poured automatically</p>
 
@@ -440,7 +440,7 @@ hr {
 	
 
         
-	<code><strong><a href="#%2fcurrent%2fauto%3d%7bid%7d%2fingredient">ingredient{…}</strong></a> - liquid ingredient <span class="fieldDetails"></span></code>
+	<code><strong><a href="#%2fcurrent%2fauto%2fingredient">ingredient</strong></a> - liquid ingredient <span class="fieldDetails"></span></code>
         
 
         
@@ -455,7 +455,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/current/auto={id}/ingredient"></a>/current/auto={id}/<span class="metalist">ingredient</span></h2>
+	<h2 class="def"><a name="/current/auto/ingredient"></a>/current/auto={id}/<span class="metalist">ingredient</span></h2>
 	<p>liquid ingredient</p>
 
         
@@ -475,7 +475,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/current/manual"></a>/current/<span class="metalist">manual</span></h2>
+	<h2 class="def"><a name="/current/manual"></a>/current/<span class="metalist">manual={id}</span></h2>
 	<p>ingredients from recipe that are not available in the pumps and would
         need to be poured manually by user</p>
 
@@ -484,7 +484,7 @@ hr {
 	
 
         
-	<code><strong><a href="#%2fcurrent%2fmanual%3d%7bid%7d%2fingredient">ingredient{…}</strong></a> - liquid ingredient <span class="fieldDetails"></span></code>
+	<code><strong><a href="#%2fcurrent%2fmanual%2fingredient">ingredient</strong></a> - liquid ingredient <span class="fieldDetails"></span></code>
         
 
         
@@ -503,7 +503,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/current/manual={id}/ingredient"></a>/current/manual={id}/<span class="metalist">ingredient</span></h2>
+	<h2 class="def"><a name="/current/manual/ingredient"></a>/current/manual={id}/<span class="metalist">ingredient</span></h2>
 	<p>liquid ingredient</p>
 
         
@@ -523,7 +523,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/recipe"></a>/<span class="metalist">recipe</span></h2>
+	<h2 class="def"><a name="/recipe"></a>/<span class="metalist">recipe={id}</span></h2>
 	<p>available list of drinks known to this bartender</p>
 
         
@@ -539,7 +539,7 @@ hr {
 	
 
         
-	<code><strong><a href="#%2frecipe%3d%7bid%7d%2fingredient">ingredient[…]</strong></a> - ingredients for recipe <span class="fieldDetails"></span></code>
+	<code><strong><a href="#%2frecipe%2fingredient">ingredient[…]</strong></a> - ingredients for recipe <span class="fieldDetails"></span></code>
         
 
 
@@ -560,7 +560,7 @@ hr {
 
 
 
-	<h2 class="def"><a name="/recipe={id}/ingredient"></a>/recipe={id}/<span class="metalist">ingredient</span></h2>
+	<h2 class="def"><a name="/recipe/ingredient"></a>/recipe={id}/<span class="metalist">ingredient={liquid}</span></h2>
 	<p>ingredients for recipe</p>
 
         
