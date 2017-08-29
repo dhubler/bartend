@@ -19,4 +19,4 @@
 ![Hardware](https://github.com/dhubler/bartend/blob/master/docs/hardware.jpg "Hardware")
 
 
-![UI](https://github.com/dhubler/bartend/blob/master/docs/user-interface.mov "UI")
+![UI](https://github.com/dhubler/bartend/blob/master/docs/user-interface.gif "UI")
