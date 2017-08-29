@@ -36,10 +36,6 @@ archive : bartend-pi
 	cp ./etc/yang/*.yang ./bartend/etc/yang
 	cp $(C2_YANG)/*.yang ./bartend/etc/yang
 	rsync -aRL ./web/ ./bartend/
-	cp \
-	  ./docs/*-api.html \
-	  ./docs/*-model.svg \
-	  ./bartend/web
 	tar -czf bartend.tgz bartend
 
 clean:
@@ -51,16 +47,14 @@ doc-tools :	$(C2DOC)
 docs : doc-tools doc-bartend doc-restconf
 
 doc-bartend:
-	$(C2DOC) -module bartend -title 'Bartend' -builtin md > bartend-api.md
-	$(C2DOC) -module bartend -title 'Bartend' -builtin html > web/api/bartend-api.html
-	$(C2DOC) -module bartend --builtin dot > .bartend-model.dot
-	dot -T svg -o ./web/api/bartend-model.svg .bartend-model.dot
+	$(C2DOC) -module bartend -title 'Bartend' -builtin md > docs/api.md
+	$(C2DOC) -module bartend --builtin dot > .api.dot
+	dot -T svg -o ./docs/api.svg .api.dot
 
 doc-restconf:
-	$(C2DOC) -module restconf -title 'RESTCONF' -builtin md > restconf-api.md
-	$(C2DOC) -module restconf -title 'RESTCONF' -builtin html  > web/api/restconf-api.html
-	$(C2DOC) -module restconf -builtin dot > .restconf-model.dot
-	dot -T svg -o ./web/api/restconf-model.svg .restconf-model.dot
+	$(C2DOC) -module restconf -title 'RESTCONF' -builtin md > docs/restconf.md
+	$(C2DOC) -module restconf -builtin dot > .restconf.dot
+	dot -T svg -o ./docs/restconf.svg .restconf.dot
 
 $(C2DOC) :
 	go install ./src/vendor/github.com/c2stack/c2g/cmd/c2-doc
