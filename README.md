@@ -8,9 +8,9 @@
 * Open Source (BSD-3)
 * Single server for API, hardware access, business logic, and user interface
 * Simple source code in Go.
+* Mobile-first UI in Polymer 2.0
 * Relatively inexpensive hardware
 * systemd script to start when Pi starts
-* Cross-compile on any machine for Pi architecture
 
 
 ![Enclusure](https://github.com/dhubler/bartend/blob/master/docs/enclosure.jpg "Enclusure")
