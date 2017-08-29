@@ -63,9 +63,7 @@ func TestAvailableRecipes(t *testing.T) {
 	}
 	for _, test := range tests {
 		available := []string{"b", "c", "d"}
-		if err := c2.CheckEqual(test.expected, AutomaticRecipes(available, test.recipes)); err != nil {
-			t.Error(err)
-		}
+		c2.AssertEqual(t, test.expected, AutomaticRecipes(available, test.recipes))
 	}
 }
 
@@ -77,9 +75,7 @@ func TestDistinctLiquids(t *testing.T) {
 	}
 	actual := DistinctLiquids(recipes)
 	expected := []string{"a", "b", "c", "d"}
-	if notEqual := c2.CheckEqual(expected, actual); notEqual != nil {
-		t.Error(notEqual)
-	}
+	c2.AssertEqual(t, expected, actual)
 }
 
 func assertEqual(t *testing.T, a interface{}, b interface{}) {
