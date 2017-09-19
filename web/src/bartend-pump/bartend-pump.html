@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
-
 <!--
     `<bartend-pump>` - Show an individual pump and it's controls.
 -->    
@@ -15,8 +15,11 @@
       margin: 3px;
       padding: 10px;
     }
-    .ingredient {
-      list-style-type: none;      
+
+    paper-item {
+      --paper-input-container-input : {
+        font-size: 20px;
+      };
     }
     .content {
       margin: 10px;
@@ -25,9 +28,9 @@
     <h1>Pump [[pump.id]]</h1>
     <div class="content">
       <paper-dropdown-menu id="liquid" on-iron-select="_update">
-        <paper-listbox class="dropdown-content" selected="[[pump.liquid]]" attr-for-selected="value">
-          <template is="dom-repeat" items="[[liquids]]">
-            <paper-item value="[[item]]">[[item]]</paper-item>
+        <paper-listbox slot="dropdown-content" selected="{{pump.liquid}}" attr-for-selected="value">
+          <template is="dom-repeat" items="{{liquids}}">
+            <paper-item value="{{item}}">{{item}}</paper-item>
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
@@ -39,49 +42,69 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'bartend-pump',
+    'use struct';
+    class BartendPump extends Polymer.GestureEventListeners(Polymer.Element) {
 
-      properties : {
+      static get is() {
+          return 'bartend-pump';
+      }
 
-        /**
-         * Pump object from REST API
-         */
-        pump: Object,
+      static get properties() {
+        return {
+          /**
+           * Pump object from REST API
+           */
+          pump: {
+            type : Object,
+            value: function() {
+              return {};
+            }
+          },
 
-        /**
-         * List of strings containing all the distinct liquids from all recipes
-         */
-        liquids: Array,
-      },
-
-      _update: function() {
-        var r = new XMLHttpRequest();
-        r.open("PUT", bartend.apiUrl + 'pump=' + this.pump.id, true);
-        r.send('{"liquid":"' + this.$.liquid.value + '"}');
-      },
+          /**
+           * List of strings containing all the distinct liquids from all recipes
+           */
+          liquids: {
+            type : Array
+          }
+        }
+      }
 
       /**
        * turn this pump on
        */
-      on : function() {
+       on() {
         this._enable(true);
-      },
+      }
 
       /**
        * turn this pump off
        */
-      off : function() {
+      off() {
         this._enable(false);
-      },
-
-      _enable: function(on) {
-        var r = new XMLHttpRequest();
-        var cmd = on ? "on" : "off";
-        r.open("POST", bartend.apiUrl + "pump=" + this.pump.id + "/" + cmd);
-        r.send();      
       }
-    });
+
+      _update() {
+        var self = this;
+        fetch(new Request(bartend.apiUrl + 'pump=' + this.pump.id, {
+            method: `PUT`,
+            body: '{"liquid":"' + self.$.liquid.value + '"}',
+        })).catch(self._err.bind(self)); 
+      }
+
+      _enable(on) {
+        var cmd = on ? "on" : "off";
+        var self = this;
+        fetch(new Request(bartend.apiUrl + "pump=" + self.pump.id + "/" + cmd, {
+            method: `POST`,
+        })).catch(self._err.bind(self));
+      }
+
+      _err(err) {
+          console.log(err);
+      }
+    }
+    customElements.define(BartendPump.is, BartendPump);    
   </script>
 </dom-module>
 

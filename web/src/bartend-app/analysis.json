@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "`<bartend-app>` show all recipes and pumps from bartender machine.\n        You only need one of these per application and it accepts no \n        parameters.",
+      "summary": "",
+      "path": "bartend-app.html",
+      "properties": [
+        {
+          "name": "_selected",
+          "type": "number",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 67,
+              "column": 16
+            },
+            "end": {
+              "line": 70,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "_data",
+          "type": "Object",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 71,
+              "column": 16
+            },
+            "end": {
+              "line": 76,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 80,
+              "column": 8
+            },
+            "end": {
+              "line": 90,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_err",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 92,
+              "column": 8
+            },
+            "end": {
+              "line": 94,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "err"
+            }
+          ]
+        },
+        {
+          "name": "_subscribe",
+          "description": "watch bartender for drink updates",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 97,
+              "column": 8
+            },
+            "end": {
+              "line": 118,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 59,
+          "column": 4
+        },
+        "end": {
+          "line": 119,
+          "column": 5
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "BartendApp",
+      "attributes": [],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "bartend-app"
+    }
+  ]
+}

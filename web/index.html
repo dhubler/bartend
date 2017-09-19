@@ -1,27 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <title>Bartend</title>
-    <meta name="description" content="Bartend will make you a drink">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-    <meta name="theme-color" content="#3f51b5">
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="notify.js"></script>    
-    <script src="bartend.js"></script>    
-    <link rel="import" href="src/bartend-app/bartend-app.html">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Roboto', 'Noto', sans-serif;
-            line-height: 1.5;
-            min-height: 100vh;
-            background-color: #eeeeee;
-        }
-    </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+        <title>Bartend</title>
+        <meta name="description" content="Bartend will make you a drink">
+        <link rel="manifest" href="manifest.json">
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+        <meta name="theme-color" content="#3f51b5">
+        <script src="notify.js"></script>    
+        <script src="bartend.js"></script>    
+        <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+        <link rel="import" href="bower_components/polymer/polymer.html">
+        <link rel="import" href="src/bartend-app/bartend-app.html">
+        <style>
+            body {
+                margin: 0;
+                font-family: 'Roboto', 'Noto', sans-serif;
+                line-height: 1.5;
+                min-height: 100vh;
+                background-color: #eeeeee;
+            }
+        </style>
     </head>
     <body>  
-        <bartend-app></bartend-app>      
+        <bartend-app></bartend-app>
     </body>
 </html>

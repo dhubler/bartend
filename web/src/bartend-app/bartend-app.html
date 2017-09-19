@@ -1,5 +1,4 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
@@ -16,23 +15,24 @@
 -->    
 <dom-module id="bartend-app">
   <template>
-    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
     <style>
-    :host {
-      display: block;
-    }
-    .link {
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
-        color: #ffffff;
-    }
-    .card {
-        display: block;
-        margin: 5px;
-    }    
-    paper-tabs {
-        background-color: #2196f3;
-    }
+        :host {
+            display: block;
+        }
+        .link {
+            color: #ffffff;
+            text-align: center;
+            font-size: large;
+            margin-top: 15px;
+        }
+        .card {
+            display: block;
+            margin: 5px;
+        }    
+        paper-tabs {
+            background-color: #2196f3;
+            text-transform: uppercase;
+        }
     </style>
     <paper-tabs id="menu" selected="{{_selected}}">
         <paper-tab link><a href="#recipes" class="link" tabindex="-1">Recipes</a></paper-tab>
@@ -50,56 +50,52 @@
         <div class="layout vertical" id="setup">            
             <template is="dom-repeat" items="{{_data.pump}}">
                 <paper-card class="flex card">
-                    <bartend-pump pump="{{item}}" liquids="[[liquids]]"></bartend-pump>
+                    <bartend-pump pump="{{item}}" liquids="[[_data.liquids]]"></bartend-pump>
                 </paper-card>
             </template>
         </div>
     </iron-pages>
   </template>
-    <script>
-    Polymer({
-        is: 'bartend-app',
-        properties: {
-            _selected : {
-                type: Number,
-                value: 0
-            },
-            _data : {
-                type: Object
-            }
-        },
+  <script>
+    class BartendApp extends Polymer.GestureEventListeners(Polymer.Element) {
 
-        // when component is added to DOM
-        attached: function() {
-            var self = this;
-            var r = new XMLHttpRequest();
+        static get is() {
+            return 'bartend-app';
+        }
 
-            // download all recipes and pumps
-            r.open("GET", bartend.apiUrl, true);
-            r.onreadystatechange = function () {
-                if (r.readyState != 4 || r.status != 200) {
-                    return;
-                }
-                self._data = JSON.parse(r.responseText);
-                self._subscribe();
-            };
-            r.send();
-
-            // download just unique list of liquids
-            var rl = new XMLHttpRequest();
-            rl.open("GET", bartend.apiUrl + '?fields=liquids', true);
-            rl.onreadystatechange = function() {
-                if (rl.readyState === XMLHttpRequest.DONE) {
-                    if (rl.status === 200) {
-                        self.liquids = JSON.parse(rl.responseText).liquids;
+        static get properties() {
+            return  {
+                _selected : {
+                    type: Number,
+                    value: 0
+                },
+                _data : {
+                    type: Object,
+                    value: function() {
+                        return {};
                     }
                 }
-            }; 
-            rl.send();            
-        },
+            }
+        }
+
+        ready() {
+            super.ready();
+            var self = this;
+            fetch(bartend.apiUrl).then((resp) => {
+                resp.json().then((data) => {
+                    self._data = data;
+                    self.notifyPath("_data.pump");
+                    self._subscribe();
+                });
+            }).catch(self._err.bind(self));
+        }
+
+        _err(err) {
+            console.log(err);
+        }
 
         // watch bartender for drink updates
-        _subscribe: function() {
+        _subscribe() {
             var self = this;
             var complete = false;
             bartend.wsocket().on('bartend-app', 'current/update', 'bartend', function(update, err) {
@@ -121,7 +117,8 @@
                 }
             });
         }
-    });
-    </script>
+    }
+    customElements.define(BartendApp.is, BartendApp);
+  </script>
 </dom-module>
 

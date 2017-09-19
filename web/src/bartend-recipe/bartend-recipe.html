@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bartend-drink/bartend-drink.html">
 
 <!--
@@ -10,41 +10,36 @@
 <dom-module id="bartend-recipe">
   <template strip-whitespace>
     <style>
-    :host {
-      display: block;
-      margin: 1px;
-      padding: 5px;
-    }
-    .ingredient {
-      list-style-type: none;      
-    }
-    .content {
-      display: flex;
-      flex-direction: row;
-    }
-    .main {
-      flex: 1;
-    }
-    .body {
-      flex: 2;
-      font-size: large;
-    }
-    paper-button.major {
-      background-color: #2196f3;
-      color: #ffffff;
-    }
-    .buttonBar {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .buttonSpacer {
-      flex: 1;
-    }
-
-    #makeDialog {
-      display: none;
-    }
+      :host {
+        display: block;
+        margin: 1px;
+        padding: 5px;
+      }
+      .ingredient {
+        list-style-type: none;      
+      }
+      .content {
+        display: flex;
+        flex-direction: row;
+      }
+      .main {
+        flex: 1;
+      }
+      .body {
+        flex: 2;
+        font-size: large;
+      }
+      paper-button.major {
+        background-color: #2196f3;
+        color: #ffffff;
+      }
+      .buttonBar {
+        display: flex;
+        flex-direction: row;
+      }
+      .buttonSpacer {
+        flex: 1;
+      }
     </style>
     <div class="content">
       <div class="main">
@@ -60,50 +55,65 @@
         <div class="buttonBar">
           <paper-button raised class="major" on-tap="make">Make</paper-button>
           <paper-button raised on-tap="sample">Sample</paper-button>
-          <bartend-drink id="drink" modal recipe="[[recipe]]"></bartend-drink>
         </div>
       </div>
     </div>
+    <paper-dialog modal id="drinkDialog">
+      <bartend-drink id="drink" recipe="[[recipe]]" on-done="_closeDrinkDialog"></bartend-drink>
+    </paper-dialog>
   </template>
 
   <script>
-    Polymer({
-      is : 'bartend-recipe',
-      
-      properties : {
+    'use strict';
+    class BartendRecipe extends Polymer.GestureEventListeners(Polymer.Element) {
 
-        /**
-         * recipe object from REST API
-         */
-        recipe  : {
-          type : Object
+      static get is() {
+          return 'bartend-recipe';
+      }
+      
+      static get properties() {
+        return {
+          /**
+           * recipe object from REST API
+           */
+          recipe  : {
+            type : Object,
+            value: function() {
+              return {};
+            }
+          }
         }
-      },
+      }
 
       /**
        * pour just a sample of this recipe into the glass
        */
-      sample: function() {
+      sample() {
         this.scale(0.1);
-      },
+      }
 
       /**
        * make this recipe
        */
-      make : function() {
+      make() {
         this.scale(1);
-      },
+      }
 
       /**
        * make a scaled up or down version of this recipe
        * 
        * @param {number} e.g. 0.1 for sample, 2 for a double
        */
-      scale: function(multiplier) {
-        this.$.drink.toggle();
+      scale(multiplier) {
+        this.$.drinkDialog.toggle();
         this.$.drink.start(multiplier);        
       }
-    });
+
+      _closeDrinkDialog() {
+        this.$.drinkDialog.close();
+      }
+    }
+    customElements.define(BartendRecipe.is, BartendRecipe);
   </script>
 
 </dom-module>
