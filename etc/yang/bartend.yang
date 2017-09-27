@@ -2,11 +2,36 @@ module bartend {
   namespace "";
   prefix "";
   revision 0;
-  description "Bartender is an app that will mix a drink by turning on a set of hardware pumps";
+  description "Bartender is an app that will mix a drink by turning on a set of 
+    liquid pumps";
+
+  list recipe {
+    description "available list of drinks known to this bartender";
+    key "id";
+
+    uses drink;
+
+    leaf madeCount {
+      description "number of times the this recipee was made";
+      type int32;
+      config "false";
+    }
+
+    action make {
+      description "make this drink";
+
+    	input {
+    		leaf multiplier {
+    			description "Optional, make it a double by passing 2 or sample it by passing 
+             0.1";
+    			type decimal64;
+    		}
+    	}
+    }
+  }
 
   list pump {
     description "direct access to hardware pumps";
-
     key "id";
     
     leaf id {
@@ -43,50 +68,6 @@ module bartend {
     description "all the unique liquids found across all recipes";
     config "false";
     type string;
-  }
-
-  grouping ingredient {
-
-    leaf liquid {
-      description "liquid name. If name does not match (case sensitive) pump 
-        liquid exactly, it will not recognized as same liquid.";
-      type string;
-    }
-
-    leaf amount {
-      description "in ounces of liquid";
-      type decimal64;
-    }
-
-    leaf weight {
-      description "in grams of liquid determined by amount and estimate of grams per ounce";
-      config "false";
-      type int32;
-    }
-  }
-
-  grouping drink {
-
-    leaf id {
-      description "unique id for this recipe";
-      type int32;
-    }
-
-    leaf name {
-      description "name of recipe";
-      type string;
-    }
-
-    leaf description {
-      description "description of recipe";
-      type string;
-    }
-
-    list ingredient {
-      description "ingredients for recipe";
-      key "liquid";
-      uses ingredient;
-    }
   }
 
   container current {
@@ -213,21 +194,47 @@ module bartend {
     } 
   }
 
-  list recipe {
-    description "available list of drinks known to this bartender";
+  grouping drink {
 
-    key "id";
-    uses drink;
+    leaf id {
+      description "unique id for this drink";
+      type int32;
+    }
 
-    action make {
-      description "make this drink";
+    leaf name {
+      description "name of drink";
+      type string;
+    }
 
-    	input {
-    		leaf multiplier {
-    			description "Optional, make it a double by passing 2";
-    			type decimal64;
-    		}
-    	}
+    leaf description {
+      description "description of drink";
+      type string;
+    }
+
+    list ingredient {
+      description "ingredients for drink";
+      key "liquid";
+      uses ingredient;
+    }
+  }  
+  
+  grouping ingredient {
+
+    leaf liquid {
+      description "liquid name. If name does not match (case sensitive) pump 
+        liquid exactly, it will not recognized as same liquid.";
+      type string;
+    }
+
+    leaf amount {
+      description "in ounces of liquid";
+      type decimal64;
+    }
+
+    leaf weight {
+      description "in grams of liquid determined by amount and estimate of grams per ounce";
+      config "false";
+      type int32;
     }
   }
 }

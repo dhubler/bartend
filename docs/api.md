@@ -2,6 +2,7 @@
 
 # Bartend
 
+![Model](api.svg)
 
 ## <a name=""></a>/
 Bartender is an app that will mix a drink by turning on a set of hardware pumps
@@ -11,13 +12,13 @@ Bartender is an app that will mix a drink by turning on a set of hardware pumps
 * **[pump[…]](#/pump)** - direct access to hardware pumps. 
 
   
+* **[recipe[…]](#/recipe)** - available list of drinks known to this bartender. 
+
+  
 * **liquids** `string[]` - all the unique liquids found across all recipes. 
 
   
 * **[current](#/current)** - current drink recipe in progress. 
-
-  
-* **[recipe[…]](#/recipe)** - available list of drinks known to this bartender. 
 
 
 
@@ -60,6 +61,64 @@ ingredient exactly, it will not recognized as same liquid..
 
 
   
+
+
+
+
+
+
+
+## <a name="/recipe"></a>/recipe={id}/
+available list of drinks known to this bartender
+
+
+  
+* **id** `int32` - unique id for this drink. 
+
+  
+* **name** `string` - name of drink. 
+
+  
+* **description** `string` - description of drink. 
+
+  
+* **[ingredient[…]](#/recipe/ingredient)** - ingredients for drink. 
+
+  
+* **madeCount** `int32` - number of times the this recipee was made. 
+
+
+
+### Actions:
+
+* <a name="/recipe/make"></a>**/recipe={id}/make** - make this drink
+ 
+  
+#### Input:
+> * **multiplier** `decimal64` - Optional, make it a double by passing 2 or sample it by passing a fraction
+
+
+  
+
+
+
+
+
+
+
+## <a name="/recipe/ingredient"></a>/recipe={id}/ingredient={liquid}/
+ingredients for drink
+
+
+  
+* **liquid** `string` - liquid name. If name does not match (case sensitive) pump 
+liquid exactly, it will not recognized as same liquid.. 
+
+  
+* **amount** `decimal64` - in ounces of liquid. 
+
+  
+* **weight** `int32` - in grams of liquid determined by amount and estimate of grams per ounce. 
 
 
 
@@ -195,61 +254,6 @@ need to be poured manually by user
 
 ## <a name="/current/manual/ingredient"></a>/current/manual={id}/ingredient/
 liquid ingredient
-
-
-  
-* **liquid** `string` - liquid name. If name does not match (case sensitive) pump 
-liquid exactly, it will not recognized as same liquid.. 
-
-  
-* **amount** `decimal64` - in ounces of liquid. 
-
-  
-* **weight** `int32` - in grams of liquid determined by amount and estimate of grams per ounce. 
-
-
-
-
-
-
-
-## <a name="/recipe"></a>/recipe={id}/
-available list of drinks known to this bartender
-
-
-  
-* **id** `int32` - unique id for this recipe. 
-
-  
-* **name** `string` - name of recipe. 
-
-  
-* **description** `string` - description of recipe. 
-
-  
-* **[ingredient[…]](#/recipe/ingredient)** - ingredients for recipe. 
-
-
-
-### Actions:
-
-* <a name="/recipe/make"></a>**/recipe={id}/make** - make this drink
- 
-  
-#### Input:
-> * **multiplier** `decimal64` - Optional, make it a double by passing 2
-
-
-  
-
-
-
-
-
-
-
-## <a name="/recipe/ingredient"></a>/recipe={id}/ingredient={liquid}/
-ingredients for recipe
 
 
   

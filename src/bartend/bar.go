@@ -105,6 +105,7 @@ type Recipe struct {
 	Id          int
 	Name        string
 	Description string
+	MadeCount   float64
 	Ingredients []*Ingredient
 }
 
@@ -313,6 +314,7 @@ func (self *Bartend) MakeDrink(recipe *Recipe, scale float64) error {
 			})
 		}
 	}
+	recipe.MadeCount += scale
 	go drink.Start(self.updateJob)
 	// drink responsibly
 	return nil
