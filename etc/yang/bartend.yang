@@ -5,31 +5,6 @@ module bartend {
   description "Bartender is an app that will mix a drink by turning on a set of 
     liquid pumps";
 
-  list recipe {
-    description "available list of drinks known to this bartender";
-    key "id";
-
-    uses drink;
-
-    leaf madeCount {
-      description "number of times the this recipee was made";
-      type int32;
-      config "false";
-    }
-
-    action make {
-      description "make this drink";
-
-    	input {
-    		leaf multiplier {
-    			description "Optional, make it a double by passing 2 or sample it by passing 
-             0.1";
-    			type decimal64;
-    		}
-    	}
-    }
-  }
-
   list pump {
     description "direct access to hardware pumps";
     key "id";
@@ -61,6 +36,31 @@ module bartend {
 
     action off {
         description "turn off the pump";
+    }
+  }
+
+  list recipe {
+    description "available list of drinks known to this bartender";
+    key "id";
+
+    uses drink;
+
+    leaf madeCount {
+      description "number of times the this recipee was made";
+      type int32;
+      config "false";
+    }
+
+    action make {
+      description "make this drink";
+
+    	input {
+    		leaf multiplier {
+    			description "Optional, make it a double by passing 2 or sample it by passing 
+             0.1";
+    			type decimal64;
+    		}
+    	}
     }
   }
 
