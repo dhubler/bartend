@@ -48,7 +48,7 @@ module bartend {
     leaf madeCount {
       description "number of times the this recipee was made";
       type int32;
-      config "false";
+      config false;
     }
 
     action make {
@@ -66,13 +66,13 @@ module bartend {
 
   leaf-list liquids {
     description "all the unique liquids found across all recipes";
-    config "false";
+    config false;
     type string;
   }
 
   container current {
     description "current drink recipe in progress";
-    config "false";
+    config false;
 
     leaf percentComplete {
       description "0-100 percent complete with drink";
@@ -233,7 +233,7 @@ module bartend {
 
     leaf weight {
       description "in grams of liquid determined by amount and estimate of grams per ounce";
-      config "false";
+      config false;
       type int32;
     }
   }

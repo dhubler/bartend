@@ -4,16 +4,16 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/c2stack/c2g/node"
-	"github.com/c2stack/c2g/nodes"
-	"github.com/c2stack/c2g/val"
+	"github.com/freeconf/c2g/node"
+	"github.com/freeconf/c2g/nodes"
+	"github.com/freeconf/c2g/val"
 )
 
 // Node is management for bartend app
 func Node(app *Bartend) node.Node {
 	return &nodes.Basic{
 		OnChild: func(r node.ChildRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "pump":
 				if r.New {
 					app.Pumps = make([]*Pump, 0)
@@ -42,7 +42,7 @@ func Node(app *Bartend) node.Node {
 			return nil, nil
 		},
 		OnField: func(r node.FieldRequest, hnd *node.ValueHandle) error {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "liquids":
 				hnd.Val = val.StringList(DistinctLiquids(app.Recipes))
 			}
@@ -53,9 +53,9 @@ func Node(app *Bartend) node.Node {
 
 func currentDrinkNode(app *Bartend) node.Node {
 	return &nodes.Extend{
-		Base: nodes.Reflect(app.Current),
+		Base: nodes.ReflectChild(app.Current),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "auto":
 				if len(app.Current.Automatic) > 0 {
 					return autoNodes(app.Current.Automatic), nil
@@ -70,7 +70,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 			return nil, nil
 		},
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "percentComplete":
 				hnd.Val = val.Int32(app.Current.PercentComplete())
 			case "complete":
@@ -81,7 +81,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 			return nil
 		},
 		OnNotify: func(p node.Node, r node.NotifyRequest) (node.NotifyCloser, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "update":
 				sub := app.OnDrinkUpdate(func(d *Drink) {
 					r.Send(currentDrinkNode(app))
@@ -91,7 +91,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 			return nil, nil
 		},
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "stop":
 				app.Current.Stop()
 			}
@@ -120,7 +120,7 @@ func manualNodes(steps []*ManualStep) node.Node {
 				}
 			}
 			if step != nil {
-				return stepNode(nodes.Reflect(step), id, step.Ingredient), key, nil
+				return stepNode(nodes.ReflectChild(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -147,7 +147,7 @@ func autoNodes(steps []*AutoStep) node.Node {
 				}
 			}
 			if step != nil {
-				return stepNode(nodes.Reflect(step), id, step.Ingredient), key, nil
+				return stepNode(nodes.ReflectChild(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -158,7 +158,7 @@ func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
 	return &nodes.Extend{
 		Base: base,
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "id":
 				hnd.Val = val.Int32(id)
 			default:
@@ -167,7 +167,7 @@ func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
 			return nil
 		},
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "ingredient":
 				return ingredientNode(ingredient), nil
 			}
@@ -268,9 +268,9 @@ func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
 
 func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 	return &nodes.Extend{
-		Base: nodes.Reflect(recipe),
+		Base: nodes.ReflectChild(recipe),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "ingredient":
 				if r.New {
 					recipe.Ingredients = make([]*Ingredient, 0)
@@ -282,7 +282,7 @@ func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 			return nil, nil
 		},
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "make":
 				scale := 1.0
 				if !r.Input.IsNil() {
@@ -334,9 +334,9 @@ func ingredientsNode(recipe *Recipe) node.Node {
 
 func ingredientNode(ingredient *Ingredient) node.Node {
 	return &nodes.Extend{
-		Base: nodes.Reflect(ingredient),
+		Base: nodes.ReflectChild(ingredient),
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "weight":
 				hnd.Val = val.Int32(ingredient.Weight())
 			default:
@@ -349,11 +349,11 @@ func ingredientNode(ingredient *Ingredient) node.Node {
 
 func pumpNode(pump *Pump) node.Node {
 	return &nodes.Extend{
-		Base: nodes.Reflect(pump),
+		Base: nodes.ReflectChild(pump),
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
-			switch r.Meta.GetIdent() {
+			switch r.Meta.Ident() {
 			case "on", "off":
-				on := r.Meta.GetIdent() == "on"
+				on := r.Meta.Ident() == "on"
 				log.Printf("pump=%d, on=%v", pump.GpioPin, on)
 				return nil, pump.Enable(on)
 			}

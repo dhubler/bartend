@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/c2stack/c2g/c2"
+	"github.com/freeconf/c2g/c2"
 )
 
 var ab = &Recipe{
