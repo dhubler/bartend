@@ -1,0 +1,10 @@
+.gitignore
+.api.dot
+.restconf.dot
+bartend.tgz
+bartend/
+bin/
+pkg/
+src/bartend/vendor/
+web/bower_components
+

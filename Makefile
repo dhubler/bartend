@@ -1,5 +1,5 @@
 export GOPATH=$(abspath .)
-C2_YANG = ./src/vendor/github.com/c2stack/c2g/yang
+C2_YANG = ./src/bartend/vendor/github.com/freeconf/gconf/yang
 export YANGPATH=$(abspath ./etc/yang):$(abspath $(C2_YANG))
 
 C2DOC = ./bin/c2-doc
@@ -11,6 +11,7 @@ all: \
 	test \
 	bartend \
 	docs \
+	web-deps \
 	archive
 
 bartend : bartend-host bartend-pi
@@ -18,7 +19,7 @@ bartend-pi : GOOS = linux
 bartend-pi : GOARCH = arm
 
 bartend-% :
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go install ./src/cmd/bartend
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go install ./src/bartend/cmd/bartend
 
 Test% :
 	$(MAKE) test TEST=$@
@@ -26,6 +27,10 @@ Test% :
 TEST='Test*'
 test :
 	go test $(PKGS) -run $(TEST)
+
+web-deps : ./web/bower_components
+	cd web; \
+		bower update
 
 archive : bartend-pi
 	! test -d bartend || rm -rf bartend
@@ -57,4 +62,4 @@ doc-restconf:
 	dot -T svg -o ./docs/restconf.svg .restconf.dot
 
 $(C2DOC) :
-	go install ./src/vendor/github.com/c2stack/c2g/cmd/c2-doc
+	go install ./src/bartend/vendor/github.com/freeconf/gconf/cmd/c2-doc

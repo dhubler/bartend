@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/c2stack/c2g/device"
+	"github.com/freeconf/gconf/device"
 
-	"github.com/c2stack/c2g/meta"
-	"github.com/c2stack/c2g/meta/yang"
-	"github.com/c2stack/c2g/restconf"
+	"github.com/freeconf/gconf/meta"
+	"github.com/freeconf/gconf/meta/yang"
+	"github.com/freeconf/gconf/restconf"
 )
 
 var configFileName = flag.String("config", "", "Configuration file")

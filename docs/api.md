@@ -2,10 +2,10 @@
 
 # Bartend
 
-![Model](api.svg)
 
 ## <a name=""></a>/
-Bartender is an app that will mix a drink by turning on a set of hardware pumps
+Bartender is an app that will mix a drink by turning on a set of 
+liquid pumps
 
 
   
@@ -95,7 +95,8 @@ available list of drinks known to this bartender
  
   
 #### Input:
-> * **multiplier** `decimal64` - Optional, make it a double by passing 2 or sample it by passing a fraction
+> * **multiplier** `decimal64` - Optional, make it a double by passing 2 or sample it by passing 
+0.1
 
 
   
