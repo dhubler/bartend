@@ -1,4 +1,3 @@
-var notify = {};
 
 //
 // Supports websocket instance from web browser or ws node package.
@@ -12,7 +11,7 @@ var notify = {};
 //  var driver = new WebSocket('ws://host:99/path');
 //  var n = new notify.handler(driver);
 //
-notify.handler = function(driver) {
+export function notifier(driver) {
 	this.listeners = {};
 	this.driver = driver;
 	this.lastErr = null;
@@ -61,7 +60,7 @@ notify.handler = function(driver) {
 	};
 
 	this.resubscribe = function() {
-	    for (prop in self.listeners) {
+	    for (var prop in self.listeners) {
 	        if (self.listeners.hasOwnProperty(prop)) {
                 self.subscribe(self.listeners[prop]);
 	        }
@@ -177,10 +176,3 @@ notify.handler = function(driver) {
 
 	return this;
 };
-
-// For node CommonJS compatibility, ignored in web browser
-if (typeof module != 'undefined') {
-	module.exports = {
-		handler : notify.handler
-	};
-}

@@ -1,19 +1,24 @@
-'use strict';
-var bartend = {};
+import {notifier} from './notify.js';
 
-var slash = document.location.pathname.lastIndexOf("/ui/");
-var path = document.location.pathname.substring(0, slash);
-bartend.wsUrl = 'ws://' + document.location.host + '/restconf/streams';
-bartend.apiUrl = '/restconf/data/bartend:';
+let _wsocket = null;
 
-bartend.wsocket = function() {
-    if (bartend._wsocket == null) {
-        var driver = new WebSocket(bartend.wsUrl);
-        bartend._wsocket = new notify.handler(driver);
-        bartend._wsocket.done = function() {
-            bartend._wsocket.close();
-            bartend._wsocket = null;
+export function urls() {
+    const slash = document.location.pathname.lastIndexOf("/ui/");
+    return {        
+        path : document.location.pathname.substring(0, slash),
+        wsUrl : 'ws://' + document.location.host + '/restconf/streams',
+        apiUrl : '/restconf/data/bartend:'    
+    }
+}
+
+export function wsocket() {
+    if (_wsocket == null) {    
+        var driver = new WebSocket(urls().wsUrl);
+        _wsocket = new notifier(driver);
+        _wsocket.done = function() {
+            _wsocket.close();
+            _wsocket = null;
         };
     }
-    return bartend._wsocket
+    return _wsocket;
 }
