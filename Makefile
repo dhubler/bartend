@@ -1,6 +1,7 @@
 export GOPATH=$(abspath .)
-C2_YANG = ./src/bartend/vendor/github.com/freeconf/gconf/yang
-export YANGPATH=$(abspath ./etc/yang):$(abspath $(C2_YANG))
+
+FREECONF_YANG = ./src/bartend/vendor/github.com/freeconf/gconf/yang
+export YANGPATH=$(abspath ./etc/yang):$(abspath $(FREECONF_YANG))
 
 C2DOC = ./bin/c2-doc
 
@@ -8,6 +9,7 @@ PKGS = \
     bartend
 
 all: \
+	go-deps \
 	test \
 	bartend \
 	docs \
@@ -28,9 +30,18 @@ TEST='Test*'
 test :
 	go test $(PKGS) -run $(TEST)
 
-web-deps : ./web/bower_components
+go-deps : ./src/bartend/vendor;
+
+./src/bartend/vendor :
+	cd ./src/bartend; \
+		dep ensure
+
+
+web-deps : ./web/node_modules;
+
+./web/node_modules :
 	cd web; \
-		bower update
+		yarn install
 
 archive : bartend-pi
 	! test -d bartend || rm -rf bartend
@@ -39,7 +50,7 @@ archive : bartend-pi
 	cp ./etc/bartend.service ./bartend/
 	sed -e 's|:8080|:80|' ./etc/bartend.json > ./bartend/etc/bartend.json
 	cp ./etc/yang/*.yang ./bartend/etc/yang
-	cp $(C2_YANG)/*.yang ./bartend/etc/yang
+	cp $(FREECONF_YANG)/*.yang ./bartend/etc/yang
 	rsync -aRL ./web/ ./bartend/
 	tar -czf bartend.tgz bartend
 
