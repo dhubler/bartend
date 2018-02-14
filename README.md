@@ -36,13 +36,13 @@ For graphical documentation generation:
 
 ### Building
 
-This will build everything, including binary for Pi and your current workstation so you can 
+This will build everything, including binary for Pi and your current workstation so you can develop.
 
 ```
 make
 ```
 
-##OS Support
+## OS Support
 
 This should work on all OSes.  If you port the `Makefile` to Windows, let me know and I'll include it with this project.
 
@@ -73,11 +73,13 @@ After the build, there will be a `bartend.tgz`.  Copy that to Pi and untar in `/
 
 The pumps are very slow, a drink can take close to a minute to make.  I experimented with other pumps but they do not self-prime.  Ultimately I think a gravity-fed system might be a better design. Ideas welcomed.
 
-You really shouldn't power-off Pi w/o shutting down gracefully or you risk corrupting SD card
+You really shouldn't power-off Pi w/o shutting down gracefully or you risk corrupting SD card.  Switch to read-only filesystem or add a powerdown button.
+
+Weighing scale. I started working on augmenting pumps with a scale that would allow you to pour liquids that were not attached to pumps. I never completed the integration of the hardware for the scale.
 
 ## Background
 
-This is both a functional project, hobby and example application of [FreeCONF](https://github.com/freeconf) libary.
+This is a functional project, a hobby and an example application of [FreeCONF](https://github.com/freeconf) libary.
 
 ## Support/Questions
 
