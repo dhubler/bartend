@@ -12,6 +12,14 @@
 * Relatively inexpensive hardware
 * `systemd` script to start when Pi starts
 
+![Enclosure](https://github.com/dhubler/bartend/blob/master/docs/enclosure.jpg "Enclosure")
+
+
+![Hardware](https://github.com/dhubler/bartend/blob/master/docs/hardware.jpg "Hardware")
+
+
+![UI](https://github.com/dhubler/bartend/blob/master/docs/user-interface.gif "UI")
+
 ## Building
 ### Dependencies
 
@@ -40,13 +48,26 @@ This should work on all OSes.  If you port the `Makefile` to Windows, let me kno
 
 ## Hardware
 
-* Raspberry Pi Model 3/ 2GB or bigger SD card w/Raspian. Application is around 8MB.
+* Raspberry Pi Model 3/ 2GB or bigger SD card w/Raspian. Bartender application is around 8MB total size.
 * 12v power supply, 1.5 Amp or better for driving Pi and pumps.
 * Wiring
 * 1-8 peristalic pumps. [Link](http://a.co/heFuT9v)
 * Hosing
 * Custom case
 * 12v to 5v converter (old cigarette lighter USB charger will work)
+
+## Running on local workstation
+
+```
+export YANGPATH=\
+  ./etc/yang:\
+  ./src/bartend/vendor/github.com/freeconf/gconf/yang
+./bin/bartend -config ./etc/bartend.json 
+```
+
+## Running on Pi
+
+After the build, there will be a `bartend.tgz`.  Copy that to Pi and untar in `/opt`.  You can install the `/opt/bartend/etc/service` into `systemd` for starting service with Pi.
 
 ## Limitations/Future
 
@@ -66,12 +87,3 @@ You can contact if you have any comments for suggestions.
 * twitter: @dhubler
 
 
-## Installation
-
-![Enclosure](https://github.com/dhubler/bartend/blob/master/docs/enclosure.jpg "Enclosure")
-
-
-![Hardware](https://github.com/dhubler/bartend/blob/master/docs/hardware.jpg "Hardware")
-
-
-![UI](https://github.com/dhubler/bartend/blob/master/docs/user-interface.gif "UI")
