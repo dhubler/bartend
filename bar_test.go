@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/freeconf/gconf/c2"
+	"github.com/freeconf/yang/fc"
 )
 
 var ab = &Recipe{
@@ -63,7 +63,7 @@ func TestAvailableRecipes(t *testing.T) {
 	}
 	for _, test := range tests {
 		available := []string{"b", "c", "d"}
-		c2.AssertEqual(t, test.expected, AutomaticRecipes(available, test.recipes))
+		fc.AssertEqual(t, test.expected, AutomaticRecipes(available, test.recipes))
 	}
 }
 
@@ -75,7 +75,7 @@ func TestDistinctLiquids(t *testing.T) {
 	}
 	actual := DistinctLiquids(recipes)
 	expected := []string{"a", "b", "c", "d"}
-	c2.AssertEqual(t, expected, actual)
+	fc.AssertEqual(t, expected, actual)
 }
 
 func assertEqual(t *testing.T, a interface{}, b interface{}) {
@@ -121,22 +121,22 @@ func TestMakeDrink(t *testing.T) {
 	}
 
 	if err := b.MakeDrink(r, 1); err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	if b.Current == nil {
-		t.Error("no job in progress")
+		t.Fatal("no job in progress")
 	}
 	assertEqual(t, 1, len(b.Current.Manual))
 	assertEqual(t, 1, len(b.Current.Automatic))
 	assertEqual(t, false, b.Current.Complete())
 	if err := b.MakeDrink(r, 1); err == nil {
-		t.Error("supposed to get error that drink is in progress")
+		t.Fatal("supposed to get error that drink is in progress")
 	}
 	t.Log(b.Current.Automatic[0].PourTime)
 	b.Current.Manual[0].Complete = true
 	done := make(chan bool)
 	go func() {
-		<-time.After(b.Current.Automatic[0].PourTime + (1 * time.Second))
+		<-time.After(b.Current.Automatic[0].PourTime + time.Minute)
 		close(done)
 	}()
 	b.OnDrinkUpdate(func(d *Drink) {

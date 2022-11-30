@@ -1,0 +1,97 @@
+module fc-restconf {
+	namespace "org.freeconf/restconf";
+	prefix "restconf";
+    import fc-stocklib {
+        prefix "stock";
+    }
+    import fc-call-home {
+        prefix "chome";
+    }
+    
+    description "service that implements RESTCONF RFC8040 device protocol";
+	revision 0;
+
+    leaf notifyKeepaliveTimeoutMs {
+        description "close the connection after N milliseconds of no pings or activity";
+        type int32;
+        default 30000;
+    }
+
+	leaf debug {
+	    description "enable debug log messages";
+        type boolean;
+	    default "false";
+    }
+
+    leaf streamCount {
+        description "number of open sessions. each session have have many subscriptions";
+        type int32;
+        config false;
+    }
+
+    leaf subscriptionCount {
+        description "number of subscriptions across all sessions";
+        type int32;
+        config false;        
+    }
+
+    container web {
+        description "web service used by restconf server";
+
+        leaf port {
+            description "required port number.  Examples :8010  192.168.1.10:8080";
+            type string;
+        }
+
+        leaf readTimeout {
+            description "timeout in milliseconds to wait for reading data from client";
+            type int32;
+            default 10000;
+        }
+
+        leaf writeTimeout {
+            description "timeout in milliseconds for sending data from client";
+            type int32;
+            default 10000;
+        }
+
+        container tls {
+            description "required for secure transport";
+            uses stock:tls;
+        }
+
+        container metrics {
+            description "Details for connection metrics";
+            config false;
+
+            leaf new {
+                description "Count of all new connections";
+                type int64;
+            }
+
+            leaf active {
+                description "Count of all active connections";
+                type int64;
+            }
+
+            leaf idle {
+                description "Count of all idle connections";
+                type int64;
+            }
+
+            leaf hijacked {
+                description "Count of all hijacked connections";
+                type int64;
+            }
+
+            leaf closed {
+                description "Count of all closed connections";
+                type int64;
+            }
+        }
+    }
+    
+    container callHome {
+        uses chome:callHome;
+    }
+}

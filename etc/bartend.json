@@ -1,5 +1,5 @@
 {
-	"restconf": {
+	"fc-restconf": {
 		"web" : {
 			"port" : ":8080"
 		}

@@ -1,3 +1,5 @@
+//go:build linux && arm
+
 package bartend
 
 import (

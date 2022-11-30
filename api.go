@@ -4,14 +4,14 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/freeconf/gconf/node"
-	"github.com/freeconf/gconf/nodes"
-	"github.com/freeconf/gconf/val"
+	"github.com/freeconf/yang/node"
+	"github.com/freeconf/yang/nodeutil"
+	"github.com/freeconf/yang/val"
 )
 
 // Node is management for bartend app
 func Node(app *Bartend) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnChild: func(r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.Ident() {
 			case "pump":
@@ -52,8 +52,8 @@ func Node(app *Bartend) node.Node {
 }
 
 func currentDrinkNode(app *Bartend) node.Node {
-	return &nodes.Extend{
-		Base: nodes.ReflectChild(app.Current),
+	return &nodeutil.Extend{
+		Base: nodeutil.ReflectChild(app.Current),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.Ident() {
 			case "auto":
@@ -101,7 +101,7 @@ func currentDrinkNode(app *Bartend) node.Node {
 }
 
 func manualNodes(steps []*ManualStep) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var step *ManualStep
 			key := r.Key
@@ -120,7 +120,7 @@ func manualNodes(steps []*ManualStep) node.Node {
 				}
 			}
 			if step != nil {
-				return stepNode(nodes.ReflectChild(step), id, step.Ingredient), key, nil
+				return stepNode(nodeutil.ReflectChild(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -128,7 +128,7 @@ func manualNodes(steps []*ManualStep) node.Node {
 }
 
 func autoNodes(steps []*AutoStep) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var step *AutoStep
 			key := r.Key
@@ -147,7 +147,7 @@ func autoNodes(steps []*AutoStep) node.Node {
 				}
 			}
 			if step != nil {
-				return stepNode(nodes.ReflectChild(step), id, step.Ingredient), key, nil
+				return stepNode(nodeutil.ReflectChild(step), id, step.Ingredient), key, nil
 			}
 			return nil, nil, nil
 		},
@@ -155,7 +155,7 @@ func autoNodes(steps []*AutoStep) node.Node {
 }
 
 func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
-	return &nodes.Extend{
+	return &nodeutil.Extend{
 		Base: base,
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.Ident() {
@@ -177,7 +177,7 @@ func stepNode(base node.Node, id int, ingredient *Ingredient) node.Node {
 }
 
 func pumpsNode(app *Bartend) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var p *Pump
 			row := int(r.Row)
@@ -213,7 +213,7 @@ func recipesNode(app *Bartend, recipes map[int]*Recipe) node.Node {
 	index.Sort(func(a, b reflect.Value) bool {
 		return a.Int() < b.Int()
 	})
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var recipe *Recipe
 			key := r.Key
@@ -242,7 +242,7 @@ func recipesNode(app *Bartend, recipes map[int]*Recipe) node.Node {
 }
 
 func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var recipe *Recipe
 			row := int(r.Row)
@@ -267,8 +267,8 @@ func drinksNode(app *Bartend, drinks []*Recipe) node.Node {
 }
 
 func recipeNode(app *Bartend, recipe *Recipe) node.Node {
-	return &nodes.Extend{
-		Base: nodes.ReflectChild(recipe),
+	return &nodeutil.Extend{
+		Base: nodeutil.ReflectChild(recipe),
 		OnChild: func(p node.Node, r node.ChildRequest) (node.Node, error) {
 			switch r.Meta.Ident() {
 			case "ingredient":
@@ -303,7 +303,7 @@ func recipeNode(app *Bartend, recipe *Recipe) node.Node {
 }
 
 func ingredientsNode(recipe *Recipe) node.Node {
-	return &nodes.Basic{
+	return &nodeutil.Basic{
 		OnNext: func(r node.ListRequest) (node.Node, []val.Value, error) {
 			var ingredient *Ingredient
 			var key = r.Key
@@ -333,8 +333,8 @@ func ingredientsNode(recipe *Recipe) node.Node {
 }
 
 func ingredientNode(ingredient *Ingredient) node.Node {
-	return &nodes.Extend{
-		Base: nodes.ReflectChild(ingredient),
+	return &nodeutil.Extend{
+		Base: nodeutil.ReflectChild(ingredient),
 		OnField: func(p node.Node, r node.FieldRequest, hnd *node.ValueHandle) error {
 			switch r.Meta.Ident() {
 			case "weight":
@@ -348,8 +348,8 @@ func ingredientNode(ingredient *Ingredient) node.Node {
 }
 
 func pumpNode(pump *Pump) node.Node {
-	return &nodes.Extend{
-		Base: nodes.ReflectChild(pump),
+	return &nodeutil.Extend{
+		Base: nodeutil.ReflectChild(pump),
 		OnAction: func(p node.Node, r node.ActionRequest) (node.Node, error) {
 			switch r.Meta.Ident() {
 			case "on", "off":

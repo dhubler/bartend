@@ -2,12 +2,14 @@ package bartend
 
 import (
 	"container/list"
+	"fmt"
 	"log"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/freeconf/gconf/c2"
+	"github.com/freeconf/yang/fc"
+	"github.com/freeconf/yang/nodeutil"
 	"github.com/kidoman/embd"
 )
 
@@ -153,7 +155,7 @@ func NewBartend() *Bartend {
 	}
 }
 
-var DrinkInProgress = c2.NewErrC("Drink in progress", 400)
+var DrinkInProgress = fmt.Errorf("drink in progress. %w", fc.BadRequestError)
 
 type Drink struct {
 	Automatic []*AutoStep
@@ -248,8 +250,8 @@ func (self *Drink) allPumpsOn(on bool) error {
 	return err
 }
 
-func (self *Bartend) OnDrinkUpdate(l DrinkProgressListener) c2.Subscription {
-	return c2.NewSubscription(self.listeners, self.listeners.PushBack(l))
+func (self *Bartend) OnDrinkUpdate(l DrinkProgressListener) nodeutil.Subscription {
+	return nodeutil.NewSubscription(self.listeners, self.listeners.PushBack(l))
 }
 
 func (self *Bartend) updateJob(job *Drink) {

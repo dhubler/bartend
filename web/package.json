@@ -2,37 +2,27 @@
   "name": "bartend",
   "version": "1.0.0",
   "description": "Serves drinks",
-  "main": "bartend.js",
-  "flat": true,
+  "source": "index.html",
   "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "@polymer/iron-flex-layout": "^3.0.0-pre.8",
-    "@polymer/iron-pages": "^3.0.0-pre.8",
-    "@polymer/lit-element": "^0.1.0",
-    "@polymer/neon-animation": "^3.0.0-pre.8",
-    "@polymer/paper-button": "^3.0.0-pre.8",
-    "@polymer/paper-card": "^3.0.0-pre.8",
-    "@polymer/paper-dialog": "^3.0.0-pre.8",
-    "@polymer/paper-dropdown-menu": "^3.0.0-pre.8",
-    "@polymer/paper-item": "^3.0.0-pre.8",
-    "@polymer/paper-listbox": "^3.0.0-pre.8",
-    "@polymer/paper-progress": "^3.0.0-pre.8",
-    "@polymer/paper-tabs": "^3.0.0-pre.8",
-    "@polymer/paper-toast": "^3.0.0-pre.8",
-    "@polymer/polymer": "^3.0.0-pre.8",
-    "@webcomponents/webcomponentsjs": "^1.1.0",
-    "lit-html": "^0.9.0",
-    "web-animations-js": "^2.3.1"
+  "devDependencies": {
+    "@parcel/packager-raw-url": "^2.8.0",
+    "@parcel/transformer-webmanifest": "^2.8.0",
+    "parcel": "^2.7.0",
+    "process": "0.11.10"
   },
-  "resolutions": {
-    "@webcomponents/webcomponentsjs": "1.1.0",
-    "@polymer/iron-flex-layout": "3.0.0-pre.8",
-    "lit-html": "0.9.0",
-    "@polymer/polymer": "3.0.0-pre.8",
-    "@polymer/neon-animation": "3.0.0-pre.8"
+  "dependencies": {
+    "@vaadin/button": "^23.2.10",
+    "@vaadin/dialog": "^23.2.10",
+    "@vaadin/notification": "^23.2.10",
+    "@vaadin/progress-bar": "^23.2.10",
+    "@vaadin/select": "^23.2.10",
+    "@vaadin/tabs": "^23.2.10",
+    "lit-element": "^3.2.2"
   }
 }

@@ -1,15 +1,9 @@
-export GOPATH=$(abspath .)
-
-FREECONF_YANG = ./src/bartend/vendor/github.com/freeconf/gconf/yang
-export YANGPATH=$(abspath ./etc/yang):$(abspath $(FREECONF_YANG))
-
-C2DOC = ./bin/c2-doc
+export YANGPATH=$(abspath ./etc/yang)
 
 PKGS = \
     bartend
 
 all: \
-	go-deps \
 	test \
 	bartend \
 	docs \
@@ -23,25 +17,13 @@ bartend-pi : GOARCH = arm
 bartend-% :
 	GOOS=$(GOOS) GOARCH=$(GOARCH) go install ./src/bartend/cmd/bartend
 
-Test% :
-	$(MAKE) test TEST=$@
-
-TEST='Test*'
 test :
-	go test $(PKGS) -run $(TEST)
+	go test .
 
-go-deps : ./src/bartend/vendor;
-
-./src/bartend/vendor :
-	cd ./src/bartend; \
-		dep ensure
-
-
-web-deps : ./web/node_modules;
-
-./web/node_modules :
+.PHONY: web
+web :
 	cd web; \
-		yarn install
+		npx parcel build --public-url /web/ ./index.html
 
 archive : bartend-pi
 	! test -d bartend || rm -rf bartend
@@ -50,27 +32,20 @@ archive : bartend-pi
 	cp ./etc/bartend.service ./bartend/
 	sed -e 's|:8080|:80|' ./etc/bartend.json > ./bartend/etc/bartend.json
 	cp ./etc/yang/*.yang ./bartend/etc/yang
-	cp $(FREECONF_YANG)/*.yang ./bartend/etc/yang
 	rsync -aRL ./web/ ./bartend/
 	tar -czf bartend.tgz bartend
 
+run:
+	go run ./cmd/bartend/main.go -config ./etc/bartend.json
+
+fc-yang:
+	go run github.com/freeconf/yang/cmd/fc-yang get -dir ./etc/yang
+
 clean:
-	rm -rf ./bin/* ./pkg/*
+	rm -rf ./bin/*
 
-.PHONY: doc-tools 
-doc-tools :	$(C2DOC)
+docs : docs/api.md
 
-docs : doc-tools doc-bartend doc-restconf
+docs/api.md : ./etc/yang/acc.yang
+	go run github.com/freeconf/yang/cmd/fc-yang doc -module bartend -title 'Bartend' -f md > $@
 
-doc-bartend:
-	$(C2DOC) -module bartend -title 'Bartend' -builtin md > docs/api.md
-	$(C2DOC) -module bartend --builtin dot > .api.dot
-	dot -T svg -o ./docs/api.svg .api.dot
-
-doc-restconf:
-	$(C2DOC) -module restconf -title 'RESTCONF' -builtin md > docs/restconf.md
-	$(C2DOC) -module restconf -builtin dot > .restconf.dot
-	dot -T svg -o ./docs/restconf.svg .restconf.dot
-
-$(C2DOC) :
-	go install ./src/bartend/vendor/github.com/freeconf/gconf/cmd/c2-doc

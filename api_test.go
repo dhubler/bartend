@@ -3,10 +3,10 @@ package bartend
 import (
 	"testing"
 
-	"github.com/freeconf/gconf/meta"
-	"github.com/freeconf/gconf/meta/yang"
-	"github.com/freeconf/gconf/node"
-	"github.com/freeconf/gconf/nodes"
+	"github.com/freeconf/yang/node"
+	"github.com/freeconf/yang/nodeutil"
+	"github.com/freeconf/yang/parser"
+	"github.com/freeconf/yang/source"
 )
 
 func TestNode(t *testing.T) {
@@ -54,23 +54,23 @@ func TestNode(t *testing.T) {
 			}
 		]
 	}`
-	ypath := &meta.FileStreamSource{Root: "../../etc/yang"}
-	m := yang.RequireModule(ypath, "bartend")
+	ypath := source.Dir("./etc/yang")
+	m := parser.RequireModule(ypath, "bartend")
 	app := NewBartend()
 	b := node.NewBrowser(m, Node(app))
 	root := b.Root()
-	if err := root.InsertFrom(nodes.ReadJSON(data)).LastErr; err != nil {
+	if err := root.InsertFrom(nodeutil.ReadJSON(data)).LastErr; err != nil {
 		panic(err)
 	}
 
-	in := nodes.ReadJSON(`{"multiplier":10}`)
+	in := nodeutil.ReadJSON(`{"multiplier":10}`)
 	update := make(chan bool)
 	var unsub node.NotifyCloser
 	var err error
 	if err := root.Find("recipe=0/make").Action(in).LastErr; err != nil {
 		panic(err)
 	}
-	unsub, err = root.Find("current/update").Notifications(func(msg node.Selection) {
+	unsub, err = root.Find("current/update").Notifications(func(msg node.Notification) {
 		update <- true
 		defer unsub()
 	})
