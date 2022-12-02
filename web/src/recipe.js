@@ -13,38 +13,30 @@ import * as util from './util';
 export class BartendRecipe extends LitElement {
 
     static get styles() {
-        return css`
-            :host {
-                display: block;
-                margin: 1px;
-                padding: 5px;
-            }
-            .ingredient {
-                list-style-type: none;
-            }
-            .content {
-                display: flex;
-                flex-direction: row;
-            }
-            .main {
-                flex: 1;
-            }
-            .body {
-                flex: 2;
-                font-size: large;
-            }
-            paper-button.major {
-                background-color: #2196f3;
-                color: #ffffff;
-            }
-            .buttonBar {
-                display: flex;
-                flex-direction: row;
-            }
-            .buttonSpacer {
-                flex: 1;
-            }
-        `;
+        return [
+            util.commonStyles,
+            css`
+                :host {
+                    display: flex;
+                    margin: 1px;
+                    padding: 5px;
+                    flex-direction: row;
+                }
+                .ingredient {
+                    list-style-type: none;
+                }
+                .top {
+                    flex: 1;
+                }
+                .bottom {
+                    flex: 2;
+                    font-size: large;
+                }
+                .content {
+                    list-style: none;
+                }
+            `
+        ];
     }
 
     static get properties() {
@@ -64,29 +56,27 @@ export class BartendRecipe extends LitElement {
         let drink = document.createElement('bartend-drink');
         drink.recipe = this.recipe;
         drink.start(multiplier);
-        util.openDialog(drink);
+        util.openDialog(this.recipe.name, drink);
     }
 
     render() {
         return html`
-            <div class="content">
-                <div class="main">
+            <div class="top">
                 <h1>${this.recipe.name}</h1>
                 <p>${this.recipe.description}</p>
-                </div>
-                <div class="body">
-                <ul>
+            </div>
+            <div class="bottom">
+                <ul class="content">
                     ${this.recipe.ingredient.map((ingredient) => html`
                         <li class="ingredient">${ingredient.amount} oz ${ingredient.liquid}</li>
                     `)}
                 </ul>
-                <div class="buttonBar">
-                    <vaadin-button raised theme="primary" @click=${() => this.scale(1)}>Make</vaadin-button>
-                    <vaadin-button raised on-tap=${() => this.scale(0.1)}>Sample</vaadin-button>
-                </div>
+                <div class="buttons">
+                    <vaadin-button theme="primary" @click=${() => this.scale(1)}>Make</vaadin-button>
+                    <vaadin-button @click=${() => this.scale(0.1)}>Sample</vaadin-button>
                 </div>
             </div>
-          `;
+        `;
     }
 }
 customElements.define('bartend-recipe', BartendRecipe);

@@ -1,15 +1,19 @@
 package bartend
 
 import (
+	"flag"
 	"testing"
 
+	"github.com/freeconf/yang/fc"
 	"github.com/freeconf/yang/node"
 	"github.com/freeconf/yang/nodeutil"
 	"github.com/freeconf/yang/parser"
 	"github.com/freeconf/yang/source"
 )
 
-func TestNode(t *testing.T) {
+var updateGoldFiles = flag.Bool("update", false, "update expected golden file(s)")
+
+func TestApi(t *testing.T) {
 	data := `
 	{
 		"pump": [
@@ -28,7 +32,6 @@ func TestNode(t *testing.T) {
 		],
 		"recipe": [
 			{
-				"id": 0,
 				"name": "snoop",
 				"description": "good for sipping",
 				"ingredient": [
@@ -43,12 +46,24 @@ func TestNode(t *testing.T) {
 				]
 			},
 			{
-				"id": 1,
 				"name": "straight gin",
 				"ingredient": [
 					{
 						"liquid": "gin",
-						"amount": 0.5
+						"amount": 1
+					}
+				]
+			},
+			{
+				"name": "screwdriver gin",
+				"ingredient": [
+					{
+						"liquid": "vodka",
+						"amount": 1
+					},
+					{
+						"liquid": "juice",
+						"amount": 1
 					}
 				]
 			}
@@ -60,17 +75,17 @@ func TestNode(t *testing.T) {
 	b := node.NewBrowser(m, Node(app))
 	root := b.Root()
 	if err := root.InsertFrom(nodeutil.ReadJSON(data)).LastErr; err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	in := nodeutil.ReadJSON(`{"multiplier":10}`)
 	update := make(chan bool)
 	var unsub node.NotifyCloser
 	var err error
-	if err := root.Find("recipe=0/make").Action(in).LastErr; err != nil {
-		panic(err)
+	if err := root.Find("available=snoop/make").Action(in).LastErr; err != nil {
+		t.Fatal(err)
 	}
-	unsub, err = root.Find("current/update").Notifications(func(msg node.Notification) {
+	unsub, err = root.Find("drink/update").Notifications(func(msg node.Notification) {
 		update <- true
 		defer unsub()
 	})
@@ -78,4 +93,8 @@ func TestNode(t *testing.T) {
 		t.Fatal(err)
 	}
 	<-update
+
+	actual, err := nodeutil.WritePrettyJSON(root)
+	fc.AssertEqual(t, nil, err)
+	fc.Gold(t, *updateGoldFiles, []byte(actual), "testdata/api.json")
 }

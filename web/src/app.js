@@ -20,30 +20,30 @@ export class BartendApp extends LitElement {
         this._recipes = [];
         this._pumps = [];
         this._page = 0;
+        this.loading = this._load();
+        this._tabIndex = 0;
     }
 
     connectedCallback() {
-        this._subscribe();
-        this._load().catch(console.log);
-    }
+        super.connectedCallback();
+        let _complete = false;
 
-    // private
-
-    _invalidate() {
-        render(this._render(), this.shadowRoot);
-    }
-
-    _elem(id) {
-        return this.shadowRoot.getElementById(id);
+        // feature: notify all users when anyone makes a drink.
+        util.subscribeDrinkUpdates((e) => {
+            if (e['bartend:complete'] != _complete) {
+                _complete = e['bartend:complete'];
+                util.info(_complete ? 'Drink complete' : 'Drink in progress...');
+            }
+        });
     }
 
     async _load() {
         try {
-            const resp = await fetch(urls().apiUrl);
-            this.loading = await resp.json();
-            this._recipes = this.loading.recipe;
-            this._pumps = this.loading.pump;
-            this._liquids = this.loading.liquids;
+            const resp = await fetch(`${util.url}data/bartend:`);
+            const data = await resp.json();
+            this._recipes = data['bartend:available'] || [];
+            this._pumps = data['bartend:pump'];
+            this._liquids = data['bartend:liquids'];
             this.requestUpdate();
         } catch (err) {
             util.err(err);
@@ -55,59 +55,44 @@ export class BartendApp extends LitElement {
             :host {
                 display: block;
             }
-            .link {
-                color: #ffffff;
-                text-align: center;
-                font-size: large;
-                margin-top: 15px;
-            }
-            .card {
-                display: block;
-                margin: 5px;
-            }
             vaadin-tabs {
-                background-color: #2196f3;
                 text-transform: uppercase;
             }
         `;
     }
 
-    render() {
-        let content = this.loading.then(() => {
-            html`
-                <vaadin-tabsheet>
-                    <vaadin-tabs slot="tabs" id="menu">
-                        <vaadin-tab id="recipes-tab">Recipes</vaadin-tab>
-                        <vaadin-tab id="setup-tab">Setup</vaadin-tab>
-                    </vaadin-tabs>
-                    <div class="layout vertical" id="recipes-tab">
-                        ${this._recipes.map((recipe) => html`
-                            <bartend-recipe recipe=${recipe}></bartend-recipe>
-                        `)}
-                    </div>
-                    <div class="layout vertical" id="setup-tab">
-                        ${this._pumps.map((pump) => html`
-                            <bartend-pump pump=${pump} liquids=${this._liquids}></bartend-pump>
-                        `)}
-                    </div>
-                </vaadin-tabsheet>
-            `;
-        });
-
-        return html`${until(content, html`<span>Loading...</span>`)}`;
+    _nav(e) {
+        this._tabIndex = e.detail.value;
+        let items = this.shadowRoot.getElementById("tab-sheet").children;
+        for (let i = 0; i < items.length; i++ ) {
+            items[i].style.display = (i == this._tabIndex ? 'block' : 'none');
+        }
     }
 
-    // feature: notify all users when anyone makes a drink.
-    _subscribe() {
-        let _complete = false;
-        this._subscription = new EventSource(`${util.url}restconf/data/bartend:current/update`);
-        this._subscription.addEventListener("message", e => {
-            let msg = JSON.parse(e.data);
-            if (msg.event.complete != _complete) {
-                _complete = msg.event.complete;
-                util.info(_complete ? 'Drink complete' : 'Drink in progress...');
-            }
-        });
+    render() {
+        let content = this.loading.then(() =>
+            html`
+                <vaadin-tabs slot="tabs" selected="${this._tabIndex}" @selected-changed=${this._nav} id="menu">
+                    <vaadin-tab id="recipes-tab">Recipes</vaadin-tab>
+                    <vaadin-tab id="setup-tab">Setup</vaadin-tab>
+                </vaadin-tabs>
+                <div id="tab-sheet">
+                    <div id="recipes-tab">
+                        ${this._recipes.length == 0 ? html`No available recipes. Select different liquids at pumps.` :
+                            this._recipes.map((recipe) => html`
+                                <bartend-recipe .recipe=${recipe}></bartend-recipe>
+                            `)}
+                    </div>
+                    <div id="setup-tab">
+                        ${this._pumps.map((pump) => html`
+                            <bartend-pump @update="${this._load}" .pump=${pump} .liquids=${this._liquids}></bartend-pump>
+                        `)}
+                    </div>
+                </div>
+            `
+        );
+
+        return html`${until(content, html`<span>Loading...</span>`)}`;
     }
 }
 customElements.define('bartend-app', BartendApp);

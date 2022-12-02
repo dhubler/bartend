@@ -14,9 +14,7 @@ export class BartendDrink extends LitElement {
 
     constructor() {
         super();
-
-        // properties
-        this.pouring = null;
+        this._drinkUpdate = null;
         this.recipe = null;
     }
 
@@ -24,65 +22,39 @@ export class BartendDrink extends LitElement {
         return {
             recipe: {
                 type: Object
-            },
-            pouring: {
-                type: Object
             }
         }
     }
 
     static get styles() {
-        return css`
-            :host {
-                display:block;
-                padding: 3px;
-                min-width: 300px;
-                max-width: 300px;
-                min-height: 150px;
-            }
-            .content {
-                padding: 20px;
-            }
-            .buttonBar {
-                display: flex;
-                flex-direction: row;
-            }
-            .ingredient, .progress {
-                list-style-type: none;
-            }
-            .buttonSpacer {
-                flex: 1;
-            }
-        `
+        return [
+            util.commonStyles,
+            css`
+                :host {
+                    display:block;
+                    padding: 3px;
+                    min-width: 300px;
+                    max-width: 300px;
+                    min-height: 150px;
+                }
+                .content {
+                    padding: 20px;
+                    list-style: none;
+                }
+            `
+        ];
     }
 
     connectedCallback() {
         super.connectedCallback();
-        this.loading = this._loadCurrent();
-    }
-
-    _subscribe() {
-        this._subscription = new EventSource(`${util.url}restconf/data/bartend:current/update`);
-        this._subscription.addEventListener("message", e => {
-            let msg = JSON.parse(e.data);
-            let allComplete = true;
-            msg.event.auto.map((update, i) => {
-                this.pouring[i].percentComplete = update.percentComplete;
-                if (!update.complete) {
-                    allComplete = false;
-                }
-            });
-            if (allComplete) {
+        this._unsubscribe = util.subscribeDrinkUpdates((event) => {
+            this._drinkUpdate = event;
+            if (this._drinkUpdate['bartend:complete']) {
                 this._done();
+            } else {
+                this.requestUpdate();
             }
-        });        
-    }
-
-    _unsubscribe() {
-        if (this._subscription != null) {
-            this._subscription.close();
-            this._subscription = null;
-        }
+        });
     }
 
     disconnectedCallback() {
@@ -95,13 +67,11 @@ export class BartendDrink extends LitElement {
      * @param {number} recipe multiplier. e.g. a double is 2, a sample is 0.1
      */
     async start(scale) {
-        this._unsubscribe();
         try {
-            await fetch(`${util.url}/data/bartend:recipe=${this.recipe.id}/make`, {
+            await fetch(`${util.url}data/bartend:available=${encodeURIComponent(this.recipe.name)}/make`, {
                 method: "POST",
-                body: JSON.stringify({multiplier:scale}),
+                body: JSON.stringify({'bartend:input':{multiplier:scale}}),
             });
-            await this._loadCurrent();
         } catch (err) {
             util.err(err);
         }
@@ -112,20 +82,8 @@ export class BartendDrink extends LitElement {
      */
     async stop() {
         try {
-            await fetch(`${util.url}/data/bartend:current/stop`);
+            await fetch(`${util.url}data/bartend:drink/stop`,{method:'POST'});
             this._done();
-        } catch (err) {
-            util.err(err);
-        }
-    }
-
-    async _loadCurrent() {
-        try {
-            let resp = await fetch(`${util.url}/data/bartend:current`);
-            let data = await resp.json();
-            this.pouring = data.auto;
-            this._subscribe();
-            this.requestUpdate();
         } catch (err) {
             util.err(err);
         }
@@ -136,18 +94,20 @@ export class BartendDrink extends LitElement {
     }
 
     render() {
-        let content = this.loading.then(() => html`
+        if (this._drinkUpdate == null) {
+            return html`<span>Loading...</span>`;
+        }
+        return html`
             <ul class="content">
-                ${this.pouring.map((item) => html`
-                    <li class="ingredient">${item.ingredient.liquid}</li>
-                    <li class="progress"><vaadin-progress-bar value="${item.percentComplete}"></vaadin-progress-bar></li>
+                ${this._drinkUpdate['bartend:pour'].map((item) => html`
+                    <li class="ingredient">${item.liquid}</li>
+                    <li class="progress"><vaadin-progress-bar min="0" max="100" value="${item.percentComplete}"></vaadin-progress-bar></li>
                 `)}
             </ul>
-            <div class="buttonBar">
+            <div class="buttons">
                 <vaadin-button @click="${this.stop}">Stop</vaadin-button>
             </div>
-        `);
-        return html`${until(content, html`<span>Loading...</span>`)}`;
+        `;
     }
 }
 customElements.define('bartend-drink', BartendDrink);

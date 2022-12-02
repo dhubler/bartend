@@ -1,0 +1,60 @@
+{
+"bartend:pump":[
+  {
+    "id":0,
+    "gpioPin":1,
+    "timeToVolumeRatioMs":10,
+    "liquid":"gin"},
+  {
+    "id":1,
+    "gpioPin":2,
+    "timeToVolumeRatioMs":10,
+    "liquid":"juice"}],
+"bartend:available":[
+  {
+    "name":"snoop",
+    "description":"good for sipping",
+    "ingredient":[
+      {
+        "liquid":"gin",
+        "amount":1.5},
+      {
+        "liquid":"juice",
+        "amount":1}]},
+  {
+    "name":"straight gin",
+    "ingredient":[
+      {
+        "liquid":"gin",
+        "amount":1}]}],
+"bartend:recipe":[
+  {
+    "name":"snoop",
+    "description":"good for sipping",
+    "ingredient":[
+      {
+        "liquid":"gin",
+        "amount":1.5},
+      {
+        "liquid":"juice",
+        "amount":1}],
+    "madeCount":10},
+  {
+    "name":"straight gin",
+    "ingredient":[
+      {
+        "liquid":"gin",
+        "amount":1}],
+    "madeCount":0},
+  {
+    "name":"screwdriver gin",
+    "ingredient":[
+      {
+        "liquid":"vodka",
+        "amount":1},
+      {
+        "liquid":"juice",
+        "amount":1}],
+    "madeCount":0}],
+"bartend:liquids":["gin","juice","vodka"],
+"bartend:drink":{}}

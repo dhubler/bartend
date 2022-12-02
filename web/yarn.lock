@@ -765,6 +765,17 @@
     "@vaadin/vaadin-usage-statistics" "^2.1.0"
     "lit" "^2.0.0"
 
+"@vaadin/component-base@23.3.0-alpha1":
+  "integrity" "sha512-oNOYxg/3RekiOHneWQ6FU+fBZImAJi1xEh5IZOBegSAgVeIW2djmwmi5b2wfWLlQj9gMToYFFMniKXS50n90uw=="
+  "resolved" "https://registry.npmjs.org/@vaadin/component-base/-/component-base-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/vaadin-development-mode-detector" "^2.0.0"
+    "@vaadin/vaadin-usage-statistics" "^2.1.0"
+    "lit" "^2.0.0"
+
 "@vaadin/dialog@^23.2.10":
   "integrity" "sha512-SGEDkmSNoDl5bM/Fg2K0CZOydAvj0xNVcwnNerrmUwr2Fgx7SaWaFz8caXJ/p6dkaX53Z6xISMb2Tck9IAi1zw=="
   "resolved" "https://registry.npmjs.org/@vaadin/dialog/-/dialog-23.2.10.tgz"
@@ -789,6 +800,16 @@
     "@vaadin/component-base" "~23.2.10"
     "lit" "^2.0.0"
 
+"@vaadin/field-base@23.3.0-alpha1":
+  "integrity" "sha512-nnxlYung5sEFmwuwrLYZl+0TkBH93sbCWr43KUEC7KhuDP9JW9vbfQpv/YlB9XK4D3a9uvo0BhwS80gO6FmvQQ=="
+  "resolved" "https://registry.npmjs.org/@vaadin/field-base/-/field-base-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "lit" "^2.0.0"
+
 "@vaadin/icon@~23.2.10":
   "integrity" "sha512-LOOy+qomcT1NoxK63QQZRprWuLHy2hMgezZ3fGL5Ym8by41rZLHU2OeJqWBg7ggf8ZfS++3cJO97tYWOprElpw=="
   "resolved" "https://registry.npmjs.org/@vaadin/icon/-/icon-23.2.10.tgz"
@@ -798,6 +819,17 @@
     "@vaadin/component-base" "~23.2.10"
     "@vaadin/vaadin-lumo-styles" "~23.2.10"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
+    "lit" "^2.0.0"
+
+"@vaadin/icon@23.3.0-alpha1":
+  "integrity" "sha512-UjYVsWNK/Izn3igdi07qovzqDKo9fN5iyDUaKKIFcH/DXadzjhBmFyQk+VLN7yR+l5xOqPA+Sfh9cCSSW2zmQQ=="
+  "resolved" "https://registry.npmjs.org/@vaadin/icon/-/icon-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "@vaadin/vaadin-lumo-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
     "lit" "^2.0.0"
 
 "@vaadin/input-container@~23.2.10":
@@ -822,6 +854,18 @@
     "@vaadin/vaadin-lumo-styles" "~23.2.10"
     "@vaadin/vaadin-material-styles" "~23.2.10"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
+
+"@vaadin/item@23.3.0-alpha1":
+  "integrity" "sha512-s+p4CPo4PnHBn/6mmoDJA9aqrENBrr2Ff0SkLMRJRnQoIF+dY/P2vwRMjU+C7eox+hgl4lwovLfDrDIQd1rhUQ=="
+  "resolved" "https://registry.npmjs.org/@vaadin/item/-/item-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "@vaadin/vaadin-lumo-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-material-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
 
 "@vaadin/list-box@~23.2.10":
   "integrity" "sha512-jWNg/QXqZ3rXUa1XnISI8CECvg7Z6wrxFMyqLhNWIgidq1pxQQhPo72m+32w5IPe3sUTYT3xfkVRoHzQBqxeXA=="
@@ -868,6 +912,17 @@
     "@vaadin/vaadin-material-styles" "~23.2.10"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
 
+"@vaadin/scroller@23.3.0-alpha1":
+  "integrity" "sha512-dJmeCv/fHbWpYsXLyqBal4WNgk/4GyMJgPaUa/nwX+qM0orzAjKep5BpsPDlV5+kkbDSbhDrpJzKVHnqBjz4VQ=="
+  "resolved" "https://registry.npmjs.org/@vaadin/scroller/-/scroller-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "@vaadin/vaadin-lumo-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-material-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
+
 "@vaadin/select@^23.2.10":
   "integrity" "sha512-YJgINKA2E3gmcBoABKvf7fJK4FFkuVS8yvJ+SZC/XpwbaiL4o+gCXZbjdB3tx3keuKCw4DTRczeJJPP4tPgYOw=="
   "resolved" "https://registry.npmjs.org/@vaadin/select/-/select-23.2.10.tgz"
@@ -900,6 +955,33 @@
     "@vaadin/vaadin-material-styles" "~23.2.10"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
 
+"@vaadin/tabs@23.3.0-alpha1":
+  "integrity" "sha512-8jKCWWlg7ZnV8fj/hUOapPQUXFU1DJi1Ban0t2tmSSJmfkOcdUSoT+gxjHXqBPC/58WNR8/V6ySyyvjRhpJL8Q=="
+  "resolved" "https://registry.npmjs.org/@vaadin/tabs/-/tabs-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "@vaadin/item" "23.3.0-alpha1"
+    "@vaadin/vaadin-list-mixin" "23.3.0-alpha1"
+    "@vaadin/vaadin-lumo-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-material-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
+
+"@vaadin/tabsheet@^23.3.0-alpha1":
+  "integrity" "sha512-u7notYpuufWw3r2FLhb2WR75u7cBaYUspkK/QKh60b0vOUX1sq2LbPdIrOxxc3oXaEnuXzS7lBI+9YgKs+n9hQ=="
+  "resolved" "https://registry.npmjs.org/@vaadin/tabsheet/-/tabsheet-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+    "@vaadin/field-base" "23.3.0-alpha1"
+    "@vaadin/scroller" "23.3.0-alpha1"
+    "@vaadin/tabs" "23.3.0-alpha1"
+    "@vaadin/vaadin-lumo-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-material-styles" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
+
 "@vaadin/vaadin-development-mode-detector@^2.0.0":
   "integrity" "sha512-miirBQw10UHjKwRv29iZniXCo41cLg3wFotoyTeUZ2PTGIDk/fZVFr4Q4WVKZrp3D15878vz94nNQROSmPLjdg=="
   "resolved" "https://registry.npmjs.org/@vaadin/vaadin-development-mode-detector/-/vaadin-development-mode-detector-2.0.5.tgz"
@@ -914,6 +996,15 @@
     "@polymer/polymer" "^3.0.0"
     "@vaadin/component-base" "~23.2.10"
 
+"@vaadin/vaadin-list-mixin@23.3.0-alpha1":
+  "integrity" "sha512-DSxE/Aj/XrwVLXTbLGI3YMUC4S8vja7VyGEcWj9UviTp0eT15f8lS5VtFLyPuuFdraed50sS97mspgro9Nsw3Q=="
+  "resolved" "https://registry.npmjs.org/@vaadin/vaadin-list-mixin/-/vaadin-list-mixin-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/component-base" "23.3.0-alpha1"
+
 "@vaadin/vaadin-lumo-styles@~23.2.10":
   "integrity" "sha512-5KE17UiUN5ik4MSGDVx9mHowcG8Rcyy+BV+1uj1EGJz/wCbsfCu1iwN/ESq6NJ8fx/qzP6f6INnI1JQv93vHjQ=="
   "resolved" "https://registry.npmjs.org/@vaadin/vaadin-lumo-styles/-/vaadin-lumo-styles-23.2.10.tgz"
@@ -925,6 +1016,17 @@
     "@vaadin/icon" "~23.2.10"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
 
+"@vaadin/vaadin-lumo-styles@23.3.0-alpha1":
+  "integrity" "sha512-lZqzYBbIRosdczwVzmGNRCdi5u3RrgseO1HQRVp0WYeGNKcQ3gF8ZKdtZyMHZkMzPBxqiCbCiTI24zfQblWVjw=="
+  "resolved" "https://registry.npmjs.org/@vaadin/vaadin-lumo-styles/-/vaadin-lumo-styles-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/iron-icon" "^3.0.0"
+    "@polymer/iron-iconset-svg" "^3.0.0"
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/icon" "23.3.0-alpha1"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
+
 "@vaadin/vaadin-material-styles@~23.2.10":
   "integrity" "sha512-tpqnY8RMP6knyiZN/7Kat+pyFl8khR31SzaXxai9A9jmDD17rN2MgVXeoClRgiXqzxDsVhT1/iTQx9Y1/VL03g=="
   "resolved" "https://registry.npmjs.org/@vaadin/vaadin-material-styles/-/vaadin-material-styles-23.2.10.tgz"
@@ -932,6 +1034,14 @@
   dependencies:
     "@polymer/polymer" "^3.0.0"
     "@vaadin/vaadin-themable-mixin" "~23.2.10"
+
+"@vaadin/vaadin-material-styles@23.3.0-alpha1":
+  "integrity" "sha512-XB0efH1Neuyr2uE1wZy5ER8GwSHwKXeNY4HbYQifaWBBM3oEfqrpqfYzFjZL3JsyXcQs3DwOXDwwbPhll8HC1A=="
+  "resolved" "https://registry.npmjs.org/@vaadin/vaadin-material-styles/-/vaadin-material-styles-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
+  dependencies:
+    "@polymer/polymer" "^3.0.0"
+    "@vaadin/vaadin-themable-mixin" "23.3.0-alpha1"
 
 "@vaadin/vaadin-overlay@~23.2.10":
   "integrity" "sha512-nk315TO4A6oiCNQ8TWbDP+BG6hv5KVwn42ur8uZngA+c31wvq/CHBwhvEm41nxHiYosjaYNKZnRA+yAGO2qdaA=="
@@ -948,6 +1058,14 @@
   "integrity" "sha512-o9x+XOIH1fK5AkVAmsPMCxG+a07gpHzwg9sar8rOf2zJhPTTCK/l2oMOFz+V1J7NYUpMPwd2lCIqF2G9YJmaHQ=="
   "resolved" "https://registry.npmjs.org/@vaadin/vaadin-themable-mixin/-/vaadin-themable-mixin-23.2.10.tgz"
   "version" "23.2.10"
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "lit" "^2.0.0"
+
+"@vaadin/vaadin-themable-mixin@23.3.0-alpha1":
+  "integrity" "sha512-FcZmIUCuXBqj69IzL/DYSX23seRcYtKvp06KwoJWwPNwJbeIQkiY8cqLINAeSadE3aL7lmHxbd8881I0v51X6A=="
+  "resolved" "https://registry.npmjs.org/@vaadin/vaadin-themable-mixin/-/vaadin-themable-mixin-23.3.0-alpha1.tgz"
+  "version" "23.3.0-alpha1"
   dependencies:
     "@open-wc/dedupe-mixin" "^1.3.0"
     "lit" "^2.0.0"
@@ -1021,9 +1139,9 @@
   "version" "3.1.0"
 
 "caniuse-lite@^1.0.30001400":
-  "integrity" "sha512-aOBHrLmTQw//WFa2rcF1If9fa3ypkC1wzqqiKHgfdrXTWcU8C4gKVZT77eQAPWN1APys3+uQ0Df07rKauXGEYA=="
-  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001434.tgz"
-  "version" "1.0.30001434"
+  "integrity" "sha512-kdCkUTjR+v4YAJelyiDTqiu82BDr4W4CP5sgTA0ZBmqn30XfS2ZghPLMowik9TPhS+psWJiUNxsqLyurDbmutA=="
+  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001435.tgz"
+  "version" "1.0.30001435"
 
 "chalk@^2.0.0":
   "integrity" "sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ=="
@@ -1279,31 +1397,31 @@
   "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
   "version" "2.2.1"
 
-"lightningcss-linux-x64-gnu@1.17.0":
-  "integrity" "sha512-xANXvOqArvnYjEGKZkjmeAvX1nchcdMZ3mYU7XbEzs9mPWbP4fyJ2AWmClslX3PyW2i1lRXsN9lFP515shsBEw=="
-  "resolved" "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.17.0.tgz"
-  "version" "1.17.0"
+"lightningcss-linux-x64-gnu@1.17.1":
+  "integrity" "sha512-OyE802IAp4DB9vZrHlOyWunbHLM9dN08tJIKN/HhzzLKIHizubOWX6NMzUXMZLsaUrYwVAHHdyEA+712p8mMzA=="
+  "resolved" "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.17.1.tgz"
+  "version" "1.17.1"
 
-"lightningcss-linux-x64-musl@1.17.0":
-  "integrity" "sha512-F4mZ9uPMD35wegJvyVOvfSuX+Xuu6N0kqNsw5o0cX0SVLEbYXh5xhXXgr/V1aS4VPGqqMR+HoSJV5FJ/g3DvEA=="
-  "resolved" "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.17.0.tgz"
-  "version" "1.17.0"
+"lightningcss-linux-x64-musl@1.17.1":
+  "integrity" "sha512-ydwGgV3Usba5P53RAOqCA9MsRsbb8jFIEVhf7/BXFjpKNoIQyijVTXhwIgQr/oGwUNOHfgQ3F8ruiUjX/p2YKw=="
+  "resolved" "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.17.1.tgz"
+  "version" "1.17.1"
 
 "lightningcss@^1.16.1":
-  "integrity" "sha512-flO6jocjeV0MUDkYCtg1+jwLqAlqrV/t3n7rUrJ6/tcntm5zfBXsewwOj7PSSv9iTNqFKJX8zIkx/M1W2AG3kw=="
-  "resolved" "https://registry.npmjs.org/lightningcss/-/lightningcss-1.17.0.tgz"
-  "version" "1.17.0"
+  "integrity" "sha512-DwwM/YYqGwLLP3he41wzDXT/m+8jdEZ80i9ViQNLRgyhey3Vm6N7XHn+4o3PY6wSnVT23WLuaROIpbpIVTNOjg=="
+  "resolved" "https://registry.npmjs.org/lightningcss/-/lightningcss-1.17.1.tgz"
+  "version" "1.17.1"
   dependencies:
     "detect-libc" "^1.0.3"
   optionalDependencies:
-    "lightningcss-darwin-arm64" "1.17.0"
-    "lightningcss-darwin-x64" "1.17.0"
-    "lightningcss-linux-arm-gnueabihf" "1.17.0"
-    "lightningcss-linux-arm64-gnu" "1.17.0"
-    "lightningcss-linux-arm64-musl" "1.17.0"
-    "lightningcss-linux-x64-gnu" "1.17.0"
-    "lightningcss-linux-x64-musl" "1.17.0"
-    "lightningcss-win32-x64-msvc" "1.17.0"
+    "lightningcss-darwin-arm64" "1.17.1"
+    "lightningcss-darwin-x64" "1.17.1"
+    "lightningcss-linux-arm-gnueabihf" "1.17.1"
+    "lightningcss-linux-arm64-gnu" "1.17.1"
+    "lightningcss-linux-arm64-musl" "1.17.1"
+    "lightningcss-linux-x64-gnu" "1.17.1"
+    "lightningcss-linux-x64-musl" "1.17.1"
+    "lightningcss-win32-x64-msvc" "1.17.1"
 
 "lines-and-columns@^1.1.6":
   "integrity" "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="
@@ -1420,7 +1538,7 @@
   "resolved" "https://registry.npmjs.org/ordered-binary/-/ordered-binary-1.4.0.tgz"
   "version" "1.4.0"
 
-"parcel@^2.7.0":
+"parcel@^2.8.0":
   "integrity" "sha512-p7Fo75CeMw5HC1luovYpBjzPbAJv/Gn7lxcs4f0LxcwBCWbkQ73zHgJXJQqnM38qQABEYEiQq6000+j+k5U/Mw=="
   "resolved" "https://registry.npmjs.org/parcel/-/parcel-2.8.0.tgz"
   "version" "2.8.0"

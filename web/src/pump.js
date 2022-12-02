@@ -6,6 +6,9 @@ import '@vaadin/select';
 import { LitElement, html, css} from 'lit';
 import * as util from './util';
 
+/**
+ *  `<bartend-pump>` configures and interacts with liquid pumps
+ */
 export class BartendPump extends LitElement {
 
     static get properties() {
@@ -19,23 +22,29 @@ export class BartendPump extends LitElement {
         }
     }
 
-    _update(e) {
-        if (this.pump.liquid == e.target.selected) {
+    async _update(e) {
+        const liquid = e.target.value;
+        if (this.pump.liquid == liquid) {
             // nop, also first render, not user interaction
             return
         }
-        this.pump.liquid = e.target.selected;
-        fetch(`${urls().apiUrl}pump=${this.pump.id}`, {
-            method: `PUT`,
-            body: JSON.stringify({liquid: this.pump.liquid}),
-        }).catch(console.log);
+        try {
+            await fetch(`${util.url}data/bartend:pump=${this.pump.id}`, {
+                method: "PUT",
+                body: JSON.stringify({'bartend:liquid': liquid}),
+            });
+            this.pump.liquid = liquid;
+            this.dispatchEvent(new CustomEvent("update"));
+        } catch (err) {
+            util.err(err);
+        }
     }
 
     async _enable(on) {
         try {
             let cmd = on ? 'on' : 'off';
             await fetch(`${util.url}data/bartend:pump=${this.pump.id}/${cmd}`, {
-                method: `POST`,
+                method: "POST",
             });
         } catch (err) {
             util.err(err);
@@ -59,10 +68,10 @@ export class BartendPump extends LitElement {
         return html`
             <h1>Pump ${this.pump.id}</h1>
             <div class="content">
-                <vaadin-select id="liquid" .items="${this.liquids}" @select=${this._update}>
+                <vaadin-select id="liquid" @change=${this._update} .value="${this.pump.liquid}" .items="${this.liquids.map((item) => {return {label:item,value:item}})}">
                 </vaadin-select>
             </div>
-            <div>
+            <div class="buttons">
                 <vaadin-button @click=${() => this._enable('on')}>On</vaadin-button>
                 <vaadin-button @click="${() => this._enable('off')}">Off</vaadin-button>
             </div>

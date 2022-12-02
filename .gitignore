@@ -1,10 +1,8 @@
-.gitignore
-.api.dot
-.restconf.dot
 bartend.tgz
 bartend/
 bin/
-pkg/
-src/bartend/vendor/
 web/node_modules
-
+.parcel-cache/
+.vscode/
+web/.parcel-cache/
+web/dist/
