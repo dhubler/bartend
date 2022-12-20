@@ -1,13 +1,12 @@
 {
 	"fc-restconf": {
+		"debug": true,
 		"web" : {
 			"port" : ":8080"
-		},
-		"debug": true,		
-		"callHome": {
-			"address": "localhost:8090",
-			"endpoint": "restconf/operations/fc-gateway:register"
 		}
+	},
+	"fc-call-home-client" :{
+		"localAddress": "http://{REQUEST_ADDRESS}:8080/restconf"
 	},
 	"bartend": {
 		"pump": [

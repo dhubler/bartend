@@ -4,8 +4,12 @@ test :
 	go test .
 
 # run on host in emulation mode
-run:
+run :
 	go run ./cmd/bartend/main.go -config ./etc/bartend.json
+
+.PHONY: bartend
+bartend :
+	go build -o $@ ./cmd/bartend
 
 # build web source into package
 .PHONY: web
@@ -39,3 +43,6 @@ docs/api.md : ./etc/yang/bartend.yang
 # be run when freeconf dep is updated
 update-yang :
 	go run github.com/freeconf/yang/cmd/fc-yang get -dir ./etc/yang
+
+docker :
+	docker build -t bartend .
