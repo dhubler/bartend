@@ -7,6 +7,7 @@ import (
 
 	"github.com/dhubler/bartend"
 
+	"github.com/freeconf/restconf/callhome"
 	"github.com/freeconf/restconf/device"
 
 	"github.com/freeconf/restconf"
@@ -31,13 +32,18 @@ func main() {
 	dev := device.New(ypath)
 
 	svr := restconf.NewServer(dev)
+	chkErr(callhome.Install(dev))
 
 	svr.RegisterWebApp(*webDir, "index.html", "web")
-	dev.Add("bartend", bartend.Node(app))
+	chkErr(dev.Add("bartend", bartend.Node(app)))
 
-	if err := dev.ApplyStartupConfigFile(*configFileName); err != nil {
-		panic(err)
-	}
+	chkErr(dev.ApplyStartupConfigFile(*configFileName))
 
 	select {}
+}
+
+func chkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

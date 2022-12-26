@@ -1,8 +1,12 @@
-github.com/freeconf/restconf v0.0.0-20221128222341-f40cbab4fccb h1:1vsi0odXGTbx3X74wGMFpJNuvAda8ARrSCzTZbGoOUg=
-github.com/freeconf/restconf v0.0.0-20221128222341-f40cbab4fccb/go.mod h1:IVzqimFHvGyPB3Wgt5ORXBcNcmMBq9/1T+42kVvS1hI=
-github.com/freeconf/yang v0.0.0-20221128221934-50d0de421a2e/go.mod h1:Gyc/ZO3QRHem37+73nhndzr6kX+TEZde9Cbkf3dJFP8=
+github.com/freeconf/restconf v0.0.0-20221220015335-2a3eea0e4fd9 h1:KrTA8U3Uer0sz5qzZwcmifP/AHXGpAVye1+DAPjsHXw=
+github.com/freeconf/restconf v0.0.0-20221220015335-2a3eea0e4fd9/go.mod h1:XaFX1raLiuT2jVg2ka3CElqpg562G5Embjlm+LFw5/g=
+github.com/freeconf/restconf v0.0.0-20221224115231-1dae1e668c5a h1:DwlFpHm55AB+u7IJ54nAcZ6dFuwaO7q4cd8Se2OfpCU=
+github.com/freeconf/restconf v0.0.0-20221224115231-1dae1e668c5a/go.mod h1:bLq6RKpAYL+1l1SoMOExcB40kVhlWUGdGww2Ppz8XfY=
+github.com/freeconf/yang v0.0.0-20221129142318-a555424bf792/go.mod h1:Gyc/ZO3QRHem37+73nhndzr6kX+TEZde9Cbkf3dJFP8=
 github.com/freeconf/yang v0.0.0-20221208000125-70685a6697bc h1:kCMz+cjg306OY7KB9hhTNNOVg5Yce1fFbZOELzqVTJE=
 github.com/freeconf/yang v0.0.0-20221208000125-70685a6697bc/go.mod h1:Gyc/ZO3QRHem37+73nhndzr6kX+TEZde9Cbkf3dJFP8=
+github.com/freeconf/yang v0.0.0-20221224114829-8bd2e7016006 h1:1uRZlwWYmpsrR0aIDPcrSE7FkF8EFSpDSMnPzX6Z8iY=
+github.com/freeconf/yang v0.0.0-20221224114829-8bd2e7016006/go.mod h1:qO7//xe0xJtDQiD0eO2cdpkiVpsOP9Q9Nnm8XX5D0uo=
 github.com/golang/glog v1.0.0 h1:nfP3RFugxnNRyKgeWd4oI1nYvXpxrx8ck8ZrcizshdQ=
 github.com/golang/glog v1.0.0/go.mod h1:EWib/APOK0SL3dFbYqvxE3UYd8E6s1ouQ7iEp/0LWV4=
 github.com/kidoman/embd v0.0.0-20170508013040-d3d8c0c5c68d h1:dPUSr0RGzXAdsUTMtiyQ/2RBLIIwkv6jGnhxrufitvQ=
